@@ -1,0 +1,38 @@
+- generic [ref=f3e3]:
+  - complementary [ref=f3e4]:
+    - generic [ref=f3e5]: H
+    - generic [ref=f3e7]:
+      - button [ref=f3e8] [cursor=pointer]
+      - button [active] [ref=f3e14] [cursor=pointer]
+    - generic [ref=f3e19]:
+      - button [ref=f3e20] [cursor=pointer]
+      - button [ref=f3e24] [cursor=pointer]
+      - button [ref=f3e28] [cursor=pointer]
+      - button [ref=f3e31] [cursor=pointer]
+      - button [ref=f3e44] [cursor=pointer]
+      - button [ref=f3e48] [cursor=pointer]
+      - button [ref=f3e53] [cursor=pointer]
+      - button [ref=f3e59] [cursor=pointer]
+    - generic [ref=f3e66]:
+      - button [ref=f3e67] [cursor=pointer]
+      - button [ref=f3e71] [cursor=pointer]
+      - button [ref=f3e75] [cursor=pointer]
+      - button [ref=f3e79] [cursor=pointer]
+      - button [ref=f3e82] [cursor=pointer]
+      - button [ref=f3e85] [cursor=pointer]
+  - generic [ref=f3e96]:
+    - generic [ref=f3e97]:
+      - generic [ref=f3e98]:
+        - generic [ref=f3e99]: Workspace
+        - generic [ref=f3e102]: Agent Builder
+      - generic [ref=f3e103]:
+        - generic [ref=f3e104]: MiniMax M3
+        - generic [ref=f3e105]: Hermes GW
+        - generic [ref=f3e106]: development
+        - button "Refresh runtime" [ref=f3e107] [cursor=pointer]
+    - main [ref=f3e873]:
+      - iframe [ref=f3e875]:
+        - generic [ref=f4e1]:
+          - main [ref=f4e2]:
+            - generic [ref=f4e3]: Loading...
+          - region "Notifications alt+T"

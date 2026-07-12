@@ -1,0 +1,27 @@
+{
+  "id": "blank-open-agent-builder",
+  "name": "Blank Open Agent Builder Workflow",
+  "description": "Clean upstream-style starter workflow. Add agent, MCP, logic, approval, and data nodes in the real builder.",
+  "draft": true,
+  "source": "firecrawl-open-agent-builder-upstream",
+  "nodeTypes": [
+    "start",
+    "agent",
+    "mcp_tool",
+    "transform",
+    "if_else",
+    "while_loop",
+    "user_approval",
+    "end"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "label": "Start"
+    }
+  ],
+  "edges": [],
+  "createdAt": "sample",
+  "updatedAt": "sample"
+}

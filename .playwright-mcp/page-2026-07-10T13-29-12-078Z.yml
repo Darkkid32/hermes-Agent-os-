@@ -1,0 +1,48 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]: H
+    - generic [ref=e7]:
+      - button [ref=e8] [cursor=pointer]
+      - button [ref=e14] [cursor=pointer]
+    - generic [ref=e19]:
+      - button [ref=e20] [cursor=pointer]
+      - button [ref=e24] [cursor=pointer]
+      - button [ref=e28] [cursor=pointer]
+      - button [ref=e31] [cursor=pointer]
+      - button [ref=e44] [cursor=pointer]
+      - button [ref=e48] [cursor=pointer]
+      - button [ref=e53] [cursor=pointer]
+      - button [ref=e59] [cursor=pointer]
+    - generic [ref=e66]:
+      - button [ref=e67] [cursor=pointer]
+      - button [ref=e71] [cursor=pointer]
+      - button [ref=e75] [cursor=pointer]
+      - button [ref=e79] [cursor=pointer]
+      - button [ref=e82] [cursor=pointer]
+      - button [ref=e85] [cursor=pointer]
+  - generic [ref=e96]:
+    - generic [ref=e97]:
+      - generic [ref=e98]:
+        - generic [ref=e99]: Workspace
+        - generic [ref=e102]: Claude Code
+      - generic [ref=e103]:
+        - generic [ref=e104]: MiniMax M3
+        - generic [ref=e105]: Hermes GW
+        - generic [ref=e106]: development
+        - button "Refresh runtime" [ref=e107] [cursor=pointer]
+    - main [ref=e873]:
+      - generic [ref=e874]:
+        - generic [ref=e875]:
+          - generic [ref=e876]: Connector chat
+          - heading "Claude Code" [level=1] [ref=e879]
+          - paragraph [ref=e880]: Claude Code is ready; install claude or configure a local path.
+          - generic [ref=e881]:
+            - generic [ref=e882]: "Mode: NVIDIA Fallback"
+            - text: Native CLI not found; messages auto-route to NVIDIA NIM.
+        - generic [ref=e884]:
+          - paragraph [ref=e887]: Start a conversation with Claude Code.
+          - text: Your session is isolated; nothing leaves this local dialog
+        - generic [ref=e888]:
+          - textbox "Message Claude Code..." [ref=e889]
+          - button "Send" [disabled] [ref=e890]
+        - button "Advanced settings" [ref=e894] [cursor=pointer]

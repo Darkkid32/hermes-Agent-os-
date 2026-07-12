@@ -1,0 +1,124 @@
+- generic [ref=f7e3]:
+  - complementary [ref=f7e4]:
+    - generic [ref=f7e5]:
+      - generic [ref=f7e6]: H
+      - generic [ref=f7e7]:
+        - strong [ref=f7e8]: Hermes Agent Hub
+        - generic [ref=f7e9]: v1.0 backend wired
+    - generic [ref=f7e10]:
+      - paragraph [ref=f7e11]: Workspace
+      - button "Mission Control" [ref=f7e12] [cursor=pointer]
+      - button "Hermes" [active] [ref=f7e19] [cursor=pointer]
+      - button "Agent Builder" [ref=f7e33] [cursor=pointer]
+    - generic [ref=f7e39]:
+      - paragraph [ref=f7e40]: Agents
+      - button "Claude Code" [ref=f7e41] [cursor=pointer]
+      - button "OpenClaw" [ref=f7e46] [cursor=pointer]
+      - button "OpenClaude" [ref=f7e50] [cursor=pointer]
+      - button "Gemini" [ref=f7e54] [cursor=pointer]
+      - button "Codex" [ref=f7e58] [cursor=pointer]
+      - button "OpenCode" [ref=f7e62] [cursor=pointer]
+      - button "Free Claude" [ref=f7e66] [cursor=pointer]
+    - generic [ref=f7e74]:
+      - paragraph [ref=f7e75]: Automation
+      - button "Memory" [ref=f7e76] [cursor=pointer]
+      - button "Scheduler" [ref=f7e83] [cursor=pointer]
+      - button "Skills" [ref=f7e90] [cursor=pointer]
+      - button "Provider Router" [ref=f7e94] [cursor=pointer]
+    - generic [ref=f7e99]:
+      - paragraph [ref=f7e100]: Productivity
+      - button "Goals" [ref=f7e101] [cursor=pointer]
+      - button "Notebook" [ref=f7e106] [cursor=pointer]
+      - button "Kanban" [ref=f7e110] [cursor=pointer]
+      - button "SEO" [ref=f7e114] [cursor=pointer]
+      - button "Video" [ref=f7e119] [cursor=pointer]
+    - generic [ref=f7e124]:
+      - paragraph
+      - button "Setup" [ref=f7e125] [cursor=pointer]
+    - generic [ref=f7e130]:
+      - generic [ref=f7e137]: Gateway
+      - generic [ref=f7e138]: API backed
+  - generic [ref=f7e139]:
+    - generic [ref=f7e140]:
+      - generic [ref=f7e141]:
+        - generic [ref=f7e142]: Workspace
+        - generic [ref=f7e145]: Hermes
+      - generic [ref=f7e146]:
+        - generic [ref=f7e147]: MiniMax M3
+        - generic [ref=f7e148]: Hermes GW
+        - generic [ref=f7e149]: development
+        - button "Refresh runtime" [ref=f7e150] [cursor=pointer]
+    - main [ref=f7e557]:
+      - generic [ref=f7e572]:
+        - generic [ref=f7e573]: Hermes AI OS
+        - heading "Good Afternoon" [level=1] [ref=f7e576]
+        - paragraph [ref=f7e577]: What would you like to accomplish today?
+      - generic [ref=f7e578]:
+        - generic [ref=f7e583]:
+          - strong [ref=f7e584]: 18/33
+          - generic [ref=f7e585]: Modules Online
+        - generic [ref=f7e590]:
+          - strong [ref=f7e591]: "1"
+          - generic [ref=f7e592]: Agents Ready
+        - generic [ref=f7e597]:
+          - strong [ref=f7e598]: "4"
+          - generic [ref=f7e599]: Providers
+        - generic [ref=f7e603]:
+          - strong [ref=f7e604]: "0"
+          - generic [ref=f7e605]: Messages
+      - generic [ref=f7e606]:
+        - heading "Quick Actions" [level=2] [ref=f7e607]
+        - generic [ref=f7e608]:
+          - button "Claude Code Code, debug, build" [ref=f7e609] [cursor=pointer]:
+            - generic [ref=f7e613]: Claude Code
+            - generic [ref=f7e614]: Code, debug, build
+          - button "Gemini Research, analyze" [ref=f7e615] [cursor=pointer]:
+            - generic [ref=f7e618]: Gemini
+            - generic [ref=f7e619]: Research, analyze
+          - button "Codex Generate, explain" [ref=f7e620] [cursor=pointer]:
+            - generic [ref=f7e623]: Codex
+            - generic [ref=f7e624]: Generate, explain
+          - button "Goals Set objectives" [ref=f7e625] [cursor=pointer]:
+            - generic [ref=f7e629]: Goals
+            - generic [ref=f7e630]: Set objectives
+          - button "SEO Analyze visibility" [ref=f7e631] [cursor=pointer]:
+            - generic [ref=f7e635]: SEO
+            - generic [ref=f7e636]: Analyze visibility
+          - button "Notebook Capture ideas" [ref=f7e637] [cursor=pointer]:
+            - generic [ref=f7e643]: Notebook
+            - generic [ref=f7e644]: Capture ideas
+      - generic [ref=f7e645]:
+        - heading "Your Agents" [level=2] [ref=f7e646]
+        - generic [ref=f7e647]:
+          - button "Claude Code Missing" [ref=f7e648] [cursor=pointer]:
+            - generic [ref=f7e653]:
+              - strong [ref=f7e654]: Claude Code
+              - generic [ref=f7e655]: Missing
+          - button "OpenClaw Missing" [ref=f7e656] [cursor=pointer]:
+            - generic [ref=f7e661]:
+              - strong [ref=f7e662]: OpenClaw
+              - generic [ref=f7e663]: Missing
+          - button "OpenClaude Missing" [ref=f7e664] [cursor=pointer]:
+            - generic [ref=f7e668]:
+              - strong [ref=f7e669]: OpenClaude
+              - generic [ref=f7e670]: Missing
+          - button "Hermes Agent connected" [ref=f7e671] [cursor=pointer]:
+            - generic [ref=f7e685]:
+              - strong [ref=f7e686]: Hermes Agent
+              - generic [ref=f7e687]: connected
+          - button "Gemini Missing" [ref=f7e688] [cursor=pointer]:
+            - generic [ref=f7e692]:
+              - strong [ref=f7e693]: Gemini
+              - generic [ref=f7e694]: Missing
+          - button "Codex Missing" [ref=f7e695] [cursor=pointer]:
+            - generic [ref=f7e699]:
+              - strong [ref=f7e700]: Codex
+              - generic [ref=f7e701]: Missing
+          - button "OpenCode Missing" [ref=f7e702] [cursor=pointer]:
+            - generic [ref=f7e706]:
+              - strong [ref=f7e707]: OpenCode
+              - generic [ref=f7e708]: Missing
+          - button "Free Claude Code Configure" [ref=f7e709] [cursor=pointer]:
+            - generic [ref=f7e717]:
+              - strong [ref=f7e718]: Free Claude Code
+              - generic [ref=f7e719]: Configure

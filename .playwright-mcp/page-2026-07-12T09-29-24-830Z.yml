@@ -1,0 +1,90 @@
+- generic [ref=f6e3]:
+  - complementary [ref=f6e4]:
+    - generic [ref=f6e5]:
+      - generic [ref=f6e6]: H
+      - generic [ref=f6e7]:
+        - strong [ref=f6e8]: Hermes Agent Hub
+        - generic [ref=f6e9]: v1.0 backend wired
+    - generic [ref=f6e10]:
+      - paragraph [ref=f6e11]: Workspace
+      - button "Mission Control" [ref=f6e12] [cursor=pointer]
+      - button "Hermes" [ref=f6e19] [cursor=pointer]
+      - button "Agent Builder" [ref=f6e33] [cursor=pointer]
+    - generic [ref=f6e39]:
+      - paragraph [ref=f6e40]: Agents
+      - button "Claude Code" [ref=f6e41] [cursor=pointer]
+      - button "OpenClaw" [ref=f6e46] [cursor=pointer]
+      - button "OpenClaude" [ref=f6e50] [cursor=pointer]
+      - button "Gemini" [ref=f6e54] [cursor=pointer]
+      - button "Codex" [ref=f6e58] [cursor=pointer]
+      - button "OpenCode" [ref=f6e62] [cursor=pointer]
+      - button "Free Claude" [ref=f6e66] [cursor=pointer]
+    - generic [ref=f6e74]:
+      - paragraph [ref=f6e75]: Automation
+      - button "Memory" [ref=f6e76] [cursor=pointer]
+      - button "Scheduler" [ref=f6e83] [cursor=pointer]
+      - button "Skills" [ref=f6e90] [cursor=pointer]
+      - button "Provider Router" [ref=f6e94] [cursor=pointer]
+    - generic [ref=f6e99]:
+      - paragraph [ref=f6e100]: Productivity
+      - button "Goals" [active] [ref=f6e101] [cursor=pointer]
+      - button "Notebook" [ref=f6e106] [cursor=pointer]
+      - button "Kanban" [ref=f6e110] [cursor=pointer]
+      - button "SEO" [ref=f6e114] [cursor=pointer]
+      - button "Video" [ref=f6e119] [cursor=pointer]
+    - generic [ref=f6e124]:
+      - paragraph
+      - button "Setup" [ref=f6e125] [cursor=pointer]
+    - generic [ref=f6e130]:
+      - generic [ref=f6e137]: Gateway
+      - generic [ref=f6e138]: API backed
+  - generic [ref=f6e139]:
+    - generic [ref=f6e140]:
+      - generic [ref=f6e141]:
+        - generic [ref=f6e142]: Workspace
+        - generic [ref=f6e145]: Goals
+      - generic [ref=f6e146]:
+        - generic [ref=f6e147]: MiniMax M3
+        - generic [ref=f6e148]: Hermes GW
+        - generic [ref=f6e149]: development
+        - button "Refresh runtime" [ref=f6e150] [cursor=pointer]
+    - main [ref=f6e817]:
+      - generic [ref=f6e818]:
+        - generic [ref=f6e819]:
+          - generic [ref=f6e820]: Local module
+          - heading "Goals" [level=1] [ref=f6e821]
+          - paragraph [ref=f6e822]: Local goal loops, run state, and progress tracking. 0 local items stored.
+        - generic [ref=f6e823]:
+          - generic [ref=f6e824]:
+            - generic [ref=f6e825]: Create goal
+            - generic [ref=f6e826]:
+              - generic [ref=f6e827]:
+                - generic [ref=f6e828]: Title
+                - textbox "Title" [ref=f6e829]:
+                  - /placeholder: Goals title
+              - generic [ref=f6e830]:
+                - generic [ref=f6e831]: Status
+                - textbox "Status" [ref=f6e832]: open
+              - generic [ref=f6e833]:
+                - generic [ref=f6e834]: Notes
+                - textbox "Notes" [ref=f6e835]:
+                  - /placeholder: Local private text
+            - button "Save local goal" [ref=f6e836] [cursor=pointer]
+          - generic [ref=f6e837]:
+            - generic [ref=f6e838]: Local records
+            - paragraph [ref=f6e840]: No local records yet.
+      - complementary [ref=f6e841]:
+        - heading "Local status" [level=3] [ref=f6e842]
+        - generic [ref=f6e843]:
+          - generic [ref=f6e844]: Status
+          - generic "connected" [ref=f6e845]
+        - generic [ref=f6e846]:
+          - generic [ref=f6e847]: Items
+          - generic "0" [ref=f6e848]
+        - generic [ref=f6e849]:
+          - generic [ref=f6e850]: Updated
+          - generic "not yet" [ref=f6e851]
+        - generic [ref=f6e852]:
+          - generic [ref=f6e853]: Capabilities
+          - generic "goals, plans, progress" [ref=f6e854]
+        - button "Open plugin matrix" [ref=f6e855] [cursor=pointer]

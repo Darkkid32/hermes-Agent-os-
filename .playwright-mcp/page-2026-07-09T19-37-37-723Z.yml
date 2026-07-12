@@ -1,0 +1,623 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e6]: H
+    - generic [ref=e7]:
+      - button [ref=e8] [cursor=pointer]:
+        - img [ref=e9]
+      - button [ref=e14] [cursor=pointer]:
+        - img [ref=e15]
+    - generic [ref=e19]:
+      - button [ref=e20] [cursor=pointer]:
+        - img [ref=e21]
+      - button [ref=e24] [cursor=pointer]:
+        - img [ref=e25]
+      - button [ref=e28] [cursor=pointer]:
+        - img [ref=e29]
+      - button [ref=e31] [cursor=pointer]:
+        - img [ref=e32]
+      - button [ref=e44] [cursor=pointer]:
+        - img [ref=e45]
+      - button [ref=e48] [cursor=pointer]:
+        - img [ref=e49]
+      - button [ref=e53] [cursor=pointer]:
+        - img [ref=e54]
+      - button [ref=e59] [cursor=pointer]:
+        - img [ref=e60]
+    - generic [ref=e66]:
+      - button [ref=e67] [cursor=pointer]:
+        - img [ref=e68]
+      - button [ref=e71] [cursor=pointer]:
+        - img [ref=e72]
+      - button [ref=e75] [cursor=pointer]:
+        - img [ref=e76]
+      - button [ref=e79] [cursor=pointer]:
+        - img [ref=e80]
+      - button [ref=e82] [cursor=pointer]:
+        - img [ref=e83]
+      - button [ref=e85] [cursor=pointer]:
+        - img [ref=e86]
+    - img [ref=e90]
+  - generic [ref=e96]:
+    - generic [ref=e97]:
+      - generic [ref=e98]:
+        - generic [ref=e99]: Workspace
+        - img [ref=e100]
+        - generic [ref=e102]: Mission Control
+      - generic [ref=e103]:
+        - generic [ref=e104]: MiniMax M3
+        - generic [ref=e105]: Hermes GW
+        - generic [ref=e106]: development
+        - button "Refresh runtime" [ref=e107] [cursor=pointer]:
+          - img [ref=e200]
+    - main [ref=e110]:
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e113]:
+            - img [ref=e114]
+            - text: Self-hosted runtime
+          - heading "Hermes Mission Control" [level=1] [ref=e119]
+          - paragraph [ref=e120]: Local Agent OS dashboard for connecting CLIs, model providers, workflows, local memory, and usage tracking.
+          - generic [ref=e121]:
+            - generic [ref=e122]: LOCAL RUNTIME
+            - generic [ref=e123]: elizaOS core 1.7.2 loaded
+            - generic [ref=e124]: firecrawl-open-agent-builder-compatible workflow model
+            - generic [ref=e125]: 27 modules
+        - generic [ref=e126]:
+          - button "Plugins & Connections" [ref=e127] [cursor=pointer]:
+            - img [ref=e128]
+            - text: Plugins & Connections
+          - button "Configure Routing" [ref=e134] [cursor=pointer]:
+            - img [ref=e135]
+            - text: Configure Routing
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - img [ref=e144]
+            - text: Setup checklist
+          - generic [ref=e147]:
+            - button "Runtime API elizaOS core is loadable" [ref=e202] [cursor=pointer]:
+              - generic [ref=e150]:
+                - generic [ref=e151]: Runtime API
+                - generic [ref=e152]: elizaOS core is loadable
+            - button "Model provider at least one model route is configured" [ref=e203] [cursor=pointer]:
+              - generic [ref=e155]:
+                - generic [ref=e156]: Model provider
+                - generic [ref=e157]: at least one model route is configured
+            - button "Agent routing configure Free Claude Code with OpenRouter, Ollama, or MiniMax" [ref=e158] [cursor=pointer]:
+              - generic [ref=e160]:
+                - generic [ref=e161]: Agent routing
+                - generic [ref=e162]: configure Free Claude Code with OpenRouter, Ollama, or MiniMax
+            - button "Open Agent Builder add Convex, Clerk, Firecrawl, and LLM keys before builder execution" [ref=e163] [cursor=pointer]:
+              - generic [ref=e165]:
+                - generic [ref=e166]: Open Agent Builder
+                - generic [ref=e167]: add Convex, Clerk, Firecrawl, and LLM keys before builder execution
+            - button "Local workspace Goals, SEO, Video, Notebook, Kanban, and Credits are ready" [ref=e204] [cursor=pointer]:
+              - generic [ref=e170]:
+                - generic [ref=e171]: Local workspace
+                - generic [ref=e172]: Goals, SEO, Video, Notebook, Kanban, and Credits are ready
+        - generic [ref=e173]:
+          - generic [ref=e174]:
+            - img [ref=e175]
+            - text: Package mode
+          - generic [ref=e178]:
+            - generic [ref=e179]:
+              - generic [ref=e180]: Runtime
+              - generic "hermes-agent-os-runtime" [ref=e181]
+            - generic [ref=e182]:
+              - generic [ref=e183]: Store
+              - generic "~/.hermes-agent-os/" [ref=e184]
+            - generic [ref=e185]:
+              - generic [ref=e186]: Connected
+              - generic "8/27" [ref=e205]
+            - generic [ref=e188]:
+              - generic [ref=e189]: Export
+              - generic "clean package audit enabled" [ref=e190]
+      - generic [ref=e206]:
+        - button "Claude Code Missing cli Claude Code is ready; install claude or configure a local path." [ref=e207] [cursor=pointer]:
+          - generic [ref=e208]:
+            - img [ref=e209]
+            - strong [ref=e212]: Claude Code
+          - generic [ref=e213]: Missing
+          - generic [ref=e214]:
+            - term [ref=e215]: cli
+            - definition [ref=e216]: Claude Code is ready; install claude or configure a local path.
+        - button "OpenClaw Missing cli OpenClaw is ready; install openclaw or configure a local path." [ref=e217] [cursor=pointer]:
+          - generic [ref=e218]:
+            - img [ref=e219]
+            - strong [ref=e222]: OpenClaw
+          - generic [ref=e223]: Missing
+          - generic [ref=e224]:
+            - term [ref=e225]: cli
+            - definition [ref=e226]: OpenClaw is ready; install openclaw or configure a local path.
+        - button "OpenClaude Missing cli OpenClaude is ready; install openclaude or configure a local path." [ref=e227] [cursor=pointer]:
+          - generic [ref=e228]:
+            - img [ref=e229]
+            - strong [ref=e231]: OpenClaude
+          - generic [ref=e232]: Missing
+          - generic [ref=e233]:
+            - term [ref=e234]: cli
+            - definition [ref=e235]: OpenClaude is ready; install openclaude or configure a local path.
+        - button "Hermes Agent Configure local_runtime Set HERMES_HOME or install Hermes Agent to connect local runtime state." [ref=e236] [cursor=pointer]:
+          - generic [ref=e237]:
+            - img [ref=e238]
+            - strong [ref=e250]: Hermes Agent
+          - generic [ref=e251]: Configure
+          - generic [ref=e252]:
+            - term [ref=e253]: local_runtime
+            - definition [ref=e254]: Set HERMES_HOME or install Hermes Agent to connect local runtime state.
+        - button "Codex Missing cli Codex is ready; install codex or configure a local path." [ref=e255] [cursor=pointer]:
+          - generic [ref=e256]:
+            - img [ref=e257]
+            - strong [ref=e261]: Codex
+          - generic [ref=e262]: Missing
+          - generic [ref=e263]:
+            - term [ref=e264]: cli
+            - definition [ref=e265]: Codex is ready; install codex or configure a local path.
+        - button "Hermes Gateway Configure gateway Gateway is ready; connect Hermes profiles and channels locally." [ref=e266] [cursor=pointer]:
+          - generic [ref=e267]:
+            - img [ref=e268]
+            - strong [ref=e274]: Hermes Gateway
+          - generic [ref=e275]: Configure
+          - generic [ref=e276]:
+            - term [ref=e277]: gateway
+            - definition [ref=e278]: Gateway is ready; connect Hermes profiles and channels locally.
+        - button "elizaOS Runtime connected agent_os_core 1.7.2" [ref=e279] [cursor=pointer]:
+          - generic [ref=e280]:
+            - img [ref=e281]
+            - strong [ref=e293]: elizaOS Runtime
+          - generic [ref=e294]: connected
+          - generic [ref=e295]:
+            - term [ref=e296]: agent_os_core
+            - definition [ref=e297]: 1.7.2
+        - button "Firecrawl Agent Builder Configure workflow_builder Design workflows after the upstream builder is configured; add Convex, Clerk, and Firecrawl keys before claiming builder execution." [ref=e298] [cursor=pointer]:
+          - generic [ref=e299]:
+            - img [ref=e300]
+            - strong [ref=e304]: Firecrawl Agent Builder
+          - generic [ref=e305]: Configure
+          - generic [ref=e306]:
+            - term [ref=e307]: workflow_builder
+            - definition [ref=e308]: Design workflows after the upstream builder is configured; add Convex, Clerk, and Firecrawl keys before claiming builder execution.
+      - generic [ref=e191]:
+        - heading "Agents" [level=2] [ref=e192]
+        - generic [ref=e193]: click to open control room
+      - generic [ref=e309]:
+        - article [ref=e310]:
+          - generic [ref=e311]:
+            - img [ref=e313]
+            - generic [ref=e316]:
+              - heading "Claude Code" [level=3] [ref=e317]
+              - paragraph [ref=e318]: Claude Code is ready; install claude or configure a local path.
+            - generic [ref=e319]: Missing
+          - generic [ref=e320]:
+            - generic [ref=e321]:
+              - generic [ref=e322]: Category
+              - generic "agent" [ref=e323]
+            - generic [ref=e324]:
+              - generic [ref=e325]: Configured
+              - generic "yes" [ref=e326]
+            - generic [ref=e327]:
+              - generic [ref=e328]: Missing
+              - generic "claude" [ref=e329]
+          - button "Open control room" [ref=e330] [cursor=pointer]
+        - article [ref=e331]:
+          - generic [ref=e332]:
+            - img [ref=e334]
+            - generic [ref=e337]:
+              - heading "OpenClaw" [level=3] [ref=e338]
+              - paragraph [ref=e339]: OpenClaw is ready; install openclaw or configure a local path.
+            - generic [ref=e340]: Missing
+          - generic [ref=e341]:
+            - generic [ref=e342]:
+              - generic [ref=e343]: Category
+              - generic "agent" [ref=e344]
+            - generic [ref=e345]:
+              - generic [ref=e346]: Configured
+              - generic "needs setup" [ref=e347]
+            - generic [ref=e348]:
+              - generic [ref=e349]: Missing
+              - generic "openclaw" [ref=e350]
+          - button "Open control room" [ref=e351] [cursor=pointer]
+        - article [ref=e352]:
+          - generic [ref=e353]:
+            - img [ref=e355]
+            - generic [ref=e357]:
+              - heading "OpenClaude" [level=3] [ref=e358]
+              - paragraph [ref=e359]: OpenClaude is ready; install openclaude or configure a local path.
+            - generic [ref=e360]: Missing
+          - generic [ref=e361]:
+            - generic [ref=e362]:
+              - generic [ref=e363]: Category
+              - generic "agent" [ref=e364]
+            - generic [ref=e365]:
+              - generic [ref=e366]: Configured
+              - generic "needs setup" [ref=e367]
+            - generic [ref=e368]:
+              - generic [ref=e369]: Missing
+              - generic "openclaude" [ref=e370]
+          - button "Open control room" [ref=e371] [cursor=pointer]
+        - article [ref=e372]:
+          - generic [ref=e373]:
+            - img [ref=e375]
+            - generic [ref=e387]:
+              - heading "Hermes Agent" [level=3] [ref=e388]
+              - paragraph [ref=e389]: Set HERMES_HOME or install Hermes Agent to connect local runtime state.
+            - generic [ref=e390]: Configure
+          - generic [ref=e391]:
+            - generic [ref=e392]:
+              - generic [ref=e393]: Category
+              - generic "agent" [ref=e394]
+            - generic [ref=e395]:
+              - generic [ref=e396]: Configured
+              - generic "needs setup" [ref=e397]
+            - generic [ref=e398]:
+              - generic [ref=e399]: Missing
+              - generic "HERMES_HOME" [ref=e400]
+          - button "Open control room" [ref=e401] [cursor=pointer]
+        - article [ref=e402]:
+          - generic [ref=e403]:
+            - img [ref=e405]
+            - generic [ref=e408]:
+              - heading "Gemini" [level=3] [ref=e409]
+              - paragraph [ref=e410]: Gemini is ready; install gemini or configure a local path.
+            - generic [ref=e411]: Missing
+          - generic [ref=e412]:
+            - generic [ref=e413]:
+              - generic [ref=e414]: Category
+              - generic "agent" [ref=e415]
+            - generic [ref=e416]:
+              - generic [ref=e417]: Configured
+              - generic "needs setup" [ref=e418]
+            - generic [ref=e419]:
+              - generic [ref=e420]: Missing
+              - generic "gemini" [ref=e421]
+          - button "Open control room" [ref=e422] [cursor=pointer]
+        - article [ref=e423]:
+          - generic [ref=e424]:
+            - img [ref=e426]
+            - generic [ref=e430]:
+              - heading "Codex" [level=3] [ref=e431]
+              - paragraph [ref=e432]: Codex is ready; install codex or configure a local path.
+            - generic [ref=e433]: Missing
+          - generic [ref=e434]:
+            - generic [ref=e435]:
+              - generic [ref=e436]: Category
+              - generic "agent" [ref=e437]
+            - generic [ref=e438]:
+              - generic [ref=e439]: Configured
+              - generic "needs setup" [ref=e440]
+            - generic [ref=e441]:
+              - generic [ref=e442]: Missing
+              - generic "codex" [ref=e443]
+          - button "Open control room" [ref=e444] [cursor=pointer]
+        - article [ref=e445]:
+          - generic [ref=e446]:
+            - img [ref=e448]
+            - generic [ref=e453]:
+              - heading "OpenCode" [level=3] [ref=e454]
+              - paragraph [ref=e455]: OpenCode is ready; install opencode or configure a local path.
+            - generic [ref=e456]: Missing
+          - generic [ref=e457]:
+            - generic [ref=e458]:
+              - generic [ref=e459]: Category
+              - generic "agent" [ref=e460]
+            - generic [ref=e461]:
+              - generic [ref=e462]: Configured
+              - generic "needs setup" [ref=e463]
+            - generic [ref=e464]:
+              - generic [ref=e465]: Missing
+              - generic "opencode" [ref=e466]
+          - button "Open control room" [ref=e467] [cursor=pointer]
+        - article [ref=e468]:
+          - generic [ref=e469]:
+            - img [ref=e471]
+            - generic [ref=e477]:
+              - heading "Free Claude Code" [level=3] [ref=e478]
+              - paragraph [ref=e479]: Configure a user-owned provider; this does not provide free Anthropic access.
+            - generic [ref=e480]: Configure
+          - generic [ref=e481]:
+            - generic [ref=e482]:
+              - generic [ref=e483]: Category
+              - generic "agent" [ref=e484]
+            - generic [ref=e485]:
+              - generic [ref=e486]: Configured
+              - generic "needs setup" [ref=e487]
+            - generic [ref=e488]:
+              - generic [ref=e489]: Missing
+              - generic "OPENROUTER_API_KEY or OLLAMA_HOST or MINIMAX_API_KEY" [ref=e490]
+          - button "Open control room" [ref=e491] [cursor=pointer]
+      - generic [ref=e194]:
+        - heading "Model Providers" [level=2] [ref=e195]
+        - generic [ref=e196]: connect your own keys and local endpoints
+      - generic [ref=e492]:
+        - article [ref=e493]:
+          - generic [ref=e494]:
+            - img [ref=e496]
+            - generic [ref=e499]:
+              - heading "MiniMax M3" [level=3] [ref=e500]
+              - paragraph [ref=e501]: Add MINIMAX_API_KEY to enable MiniMax routing.
+            - generic [ref=e502]: Configure
+          - generic [ref=e503]:
+            - generic [ref=e504]:
+              - generic [ref=e505]: Category
+              - generic "provider" [ref=e506]
+            - generic [ref=e507]:
+              - generic [ref=e508]: Configured
+              - generic "needs setup" [ref=e509]
+            - generic [ref=e510]:
+              - generic [ref=e511]: Missing
+              - generic "MINIMAX_API_KEY" [ref=e512]
+          - button "Open control room" [ref=e513] [cursor=pointer]
+        - article [ref=e514]:
+          - generic [ref=e515]:
+            - img [ref=e517]
+            - generic [ref=e529]:
+              - heading "Anthropic" [level=3] [ref=e530]
+              - paragraph [ref=e531]: Anthropic provider is configured locally.
+            - generic [ref=e532]: connected
+          - generic [ref=e533]:
+            - generic [ref=e534]:
+              - generic [ref=e535]: Category
+              - generic "provider" [ref=e536]
+            - generic [ref=e537]:
+              - generic [ref=e538]: Configured
+              - generic "yes" [ref=e539]
+            - generic [ref=e540]:
+              - generic [ref=e541]: Missing
+              - generic "none" [ref=e542]
+          - button "Open control room" [ref=e543] [cursor=pointer]
+        - article [ref=e544]:
+          - generic [ref=e545]:
+            - img [ref=e547]
+            - generic [ref=e549]:
+              - heading "OpenAI" [level=3] [ref=e550]
+              - paragraph [ref=e551]: Connect a user-owned OpenAI key for Codex and OpenAI model routing.
+            - generic [ref=e552]: Configure
+          - generic [ref=e553]:
+            - generic [ref=e554]:
+              - generic [ref=e555]: Category
+              - generic "provider" [ref=e556]
+            - generic [ref=e557]:
+              - generic [ref=e558]: Configured
+              - generic "needs setup" [ref=e559]
+            - generic [ref=e560]:
+              - generic [ref=e561]: Missing
+              - generic "OPENAI_API_KEY" [ref=e562]
+          - button "Open control room" [ref=e563] [cursor=pointer]
+        - article [ref=e564]:
+          - generic [ref=e565]:
+            - img [ref=e567]
+            - generic [ref=e570]:
+              - heading "Gemini API" [level=3] [ref=e571]
+              - paragraph [ref=e572]: Connect a user-owned Gemini API key for Gemini model routing.
+            - generic [ref=e573]: Configure
+          - generic [ref=e574]:
+            - generic [ref=e575]:
+              - generic [ref=e576]: Category
+              - generic "provider" [ref=e577]
+            - generic [ref=e578]:
+              - generic [ref=e579]: Configured
+              - generic "needs setup" [ref=e580]
+            - generic [ref=e581]:
+              - generic [ref=e582]: Missing
+              - generic "GEMINI_API_KEY" [ref=e583]
+          - button "Open control room" [ref=e584] [cursor=pointer]
+        - article [ref=e585]:
+          - generic [ref=e586]:
+            - img [ref=e588]
+            - generic [ref=e594]:
+              - heading "OpenRouter" [level=3] [ref=e595]
+              - paragraph [ref=e596]: Connect a user-owned OpenRouter key for Claude-style/open-provider routing.
+            - generic [ref=e597]: Configure
+          - generic [ref=e598]:
+            - generic [ref=e599]:
+              - generic [ref=e600]: Category
+              - generic "provider" [ref=e601]
+            - generic [ref=e602]:
+              - generic [ref=e603]: Configured
+              - generic "needs setup" [ref=e604]
+            - generic [ref=e605]:
+              - generic [ref=e606]: Missing
+              - generic "OPENROUTER_API_KEY" [ref=e607]
+          - button "Open control room" [ref=e608] [cursor=pointer]
+        - article [ref=e609]:
+          - generic [ref=e610]:
+            - img [ref=e612]
+            - generic [ref=e615]:
+              - heading "Ollama" [level=3] [ref=e616]
+              - paragraph [ref=e617]: Connect a local Ollama host for local model routing.
+            - generic [ref=e618]: Configure
+          - generic [ref=e619]:
+            - generic [ref=e620]:
+              - generic [ref=e621]: Category
+              - generic "provider" [ref=e622]
+            - generic [ref=e623]:
+              - generic [ref=e624]: Configured
+              - generic "needs setup" [ref=e625]
+            - generic [ref=e626]:
+              - generic [ref=e627]: Missing
+              - generic "OLLAMA_HOST" [ref=e628]
+          - button "Open control room" [ref=e629] [cursor=pointer]
+        - article [ref=e630]:
+          - generic [ref=e631]:
+            - img [ref=e633]
+            - generic [ref=e636]:
+              - heading "MiniMax" [level=3] [ref=e637]
+              - paragraph [ref=e638]: Connect a user-owned MiniMax API key.
+            - generic [ref=e639]: Configure
+          - generic [ref=e640]:
+            - generic [ref=e641]:
+              - generic [ref=e642]: Category
+              - generic "provider" [ref=e643]
+            - generic [ref=e644]:
+              - generic [ref=e645]: Configured
+              - generic "needs setup" [ref=e646]
+            - generic [ref=e647]:
+              - generic [ref=e648]: Missing
+              - generic "MINIMAX_API_KEY" [ref=e649]
+          - button "Open control room" [ref=e650] [cursor=pointer]
+        - article [ref=e651]:
+          - generic [ref=e652]:
+            - img [ref=e654]
+            - generic [ref=e659]:
+              - heading "Firecrawl" [level=3] [ref=e660]
+              - paragraph [ref=e661]: Connect Firecrawl for web/data execution in Open Agent Builder.
+            - generic [ref=e662]: Configure
+          - generic [ref=e663]:
+            - generic [ref=e664]:
+              - generic [ref=e665]: Category
+              - generic "provider" [ref=e666]
+            - generic [ref=e667]:
+              - generic [ref=e668]: Configured
+              - generic "needs setup" [ref=e669]
+            - generic [ref=e670]:
+              - generic [ref=e671]: Missing
+              - generic "FIRECRAWL_API_KEY" [ref=e672]
+          - button "Open control room" [ref=e673] [cursor=pointer]
+        - article [ref=e674]:
+          - generic [ref=e675]:
+            - img [ref=e677]
+            - generic [ref=e682]:
+              - heading "Convex" [level=3] [ref=e683]
+              - paragraph [ref=e684]: Connect Convex so the upstream Open Agent Builder can persist workflows.
+            - generic [ref=e685]: Configure
+          - generic [ref=e686]:
+            - generic [ref=e687]:
+              - generic [ref=e688]: Category
+              - generic "provider" [ref=e689]
+            - generic [ref=e690]:
+              - generic [ref=e691]: Configured
+              - generic "needs setup" [ref=e692]
+            - generic [ref=e693]:
+              - generic [ref=e694]: Missing
+              - generic "NEXT_PUBLIC_CONVEX_URL" [ref=e695]
+          - button "Open control room" [ref=e696] [cursor=pointer]
+        - article [ref=e697]:
+          - generic [ref=e698]:
+            - img [ref=e700]
+            - generic [ref=e703]:
+              - heading "Clerk" [level=3] [ref=e704]
+              - paragraph [ref=e705]: Connect Clerk authentication required by the upstream Open Agent Builder.
+            - generic [ref=e706]: Configure
+          - generic [ref=e707]:
+            - generic [ref=e708]:
+              - generic [ref=e709]: Category
+              - generic "provider" [ref=e710]
+            - generic [ref=e711]:
+              - generic [ref=e712]: Configured
+              - generic "needs setup" [ref=e713]
+            - generic [ref=e714]:
+              - generic [ref=e715]: Missing
+              - generic "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, CLERK_JWT_ISSUER_DOMAIN" [ref=e716]
+          - button "Open control room" [ref=e717] [cursor=pointer]
+      - generic [ref=e197]:
+        - heading "Local Workspace" [level=2] [ref=e198]
+        - generic [ref=e199]: works without external API keys
+      - generic [ref=e718]:
+        - article [ref=e719]:
+          - generic [ref=e720]:
+            - img [ref=e722]
+            - generic [ref=e725]:
+              - heading "Goals" [level=3] [ref=e726]
+              - paragraph [ref=e727]: Local goal loops, run state, and progress tracking. 0 local items stored.
+            - generic [ref=e728]: connected
+          - generic [ref=e729]:
+            - generic [ref=e730]:
+              - generic [ref=e731]: Category
+              - generic "self" [ref=e732]
+            - generic [ref=e733]:
+              - generic [ref=e734]: Configured
+              - generic "yes" [ref=e735]
+            - generic [ref=e736]:
+              - generic [ref=e737]: Missing
+              - generic "none" [ref=e738]
+          - button "Open control room" [ref=e739] [cursor=pointer]
+        - article [ref=e740]:
+          - generic [ref=e741]:
+            - img [ref=e743]
+            - generic [ref=e746]:
+              - heading "SEO" [level=3] [ref=e747]
+              - paragraph [ref=e748]: SEO workflow module ready for user-owned projects and APIs. 0 local items stored.
+            - generic [ref=e749]: connected
+          - generic [ref=e750]:
+            - generic [ref=e751]:
+              - generic [ref=e752]: Category
+              - generic "self" [ref=e753]
+            - generic [ref=e754]:
+              - generic [ref=e755]: Configured
+              - generic "yes" [ref=e756]
+            - generic [ref=e757]:
+              - generic [ref=e758]: Missing
+              - generic "none" [ref=e759]
+          - button "Open control room" [ref=e760] [cursor=pointer]
+        - article [ref=e761]:
+          - generic [ref=e762]:
+            - img [ref=e764]
+            - generic [ref=e767]:
+              - heading "Video" [level=3] [ref=e768]
+              - paragraph [ref=e769]: Video workflow module for captions, scripts, and render handoff. 0 local items stored.
+            - generic [ref=e770]: connected
+          - generic [ref=e771]:
+            - generic [ref=e772]:
+              - generic [ref=e773]: Category
+              - generic "self" [ref=e774]
+            - generic [ref=e775]:
+              - generic [ref=e776]: Configured
+              - generic "yes" [ref=e777]
+            - generic [ref=e778]:
+              - generic [ref=e779]: Missing
+              - generic "none" [ref=e780]
+          - button "Open control room" [ref=e781] [cursor=pointer]
+        - article [ref=e782]:
+          - generic [ref=e783]:
+            - img [ref=e785]
+            - generic [ref=e787]:
+              - heading "Notebook" [level=3] [ref=e788]
+              - paragraph [ref=e789]: Local notebook and run journal backed by the Agent OS store. 0 local items stored.
+            - generic [ref=e790]: connected
+          - generic [ref=e791]:
+            - generic [ref=e792]:
+              - generic [ref=e793]: Category
+              - generic "self" [ref=e794]
+            - generic [ref=e795]:
+              - generic [ref=e796]: Configured
+              - generic "yes" [ref=e797]
+            - generic [ref=e798]:
+              - generic [ref=e799]: Missing
+              - generic "none" [ref=e800]
+          - button "Open control room" [ref=e801] [cursor=pointer]
+        - article [ref=e802]:
+          - generic [ref=e803]:
+            - img [ref=e805]
+            - generic [ref=e807]:
+              - heading "Kanban" [level=3] [ref=e808]
+              - paragraph [ref=e809]: Local Kanban queues for agent work and human approvals. 0 local items stored.
+            - generic [ref=e810]: connected
+          - generic [ref=e811]:
+            - generic [ref=e812]:
+              - generic [ref=e813]: Category
+              - generic "self" [ref=e814]
+            - generic [ref=e815]:
+              - generic [ref=e816]: Configured
+              - generic "yes" [ref=e817]
+            - generic [ref=e818]:
+              - generic [ref=e819]: Missing
+              - generic "none" [ref=e820]
+          - button "Open control room" [ref=e821] [cursor=pointer]
+        - article [ref=e822]:
+          - generic [ref=e823]:
+            - img [ref=e825]
+            - generic [ref=e828]:
+              - heading "Usage Credits" [level=3] [ref=e829]
+              - paragraph [ref=e830]: Tracks local usage budgets and provider credit estimates. 0 local items stored.
+            - generic [ref=e831]: connected
+          - generic [ref=e832]:
+            - generic [ref=e833]:
+              - generic [ref=e834]: Category
+              - generic "self" [ref=e835]
+            - generic [ref=e836]:
+              - generic [ref=e837]: Configured
+              - generic "yes" [ref=e838]
+            - generic [ref=e839]:
+              - generic [ref=e840]: Missing
+              - generic "none" [ref=e841]
+          - button "Open control room" [ref=e842] [cursor=pointer]

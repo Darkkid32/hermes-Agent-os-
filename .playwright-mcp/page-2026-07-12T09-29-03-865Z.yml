@@ -1,0 +1,139 @@
+- generic [ref=f6e3]:
+  - complementary [ref=f6e4]:
+    - generic [ref=f6e5]:
+      - generic [ref=f6e6]: H
+      - generic [ref=f6e7]:
+        - strong [ref=f6e8]: Hermes Agent Hub
+        - generic [ref=f6e9]: v1.0 backend wired
+    - generic [ref=f6e10]:
+      - paragraph [ref=f6e11]: Workspace
+      - button "Mission Control" [ref=f6e12] [cursor=pointer]
+      - button "Hermes" [ref=f6e19] [cursor=pointer]
+      - button "Agent Builder" [ref=f6e33] [cursor=pointer]
+    - generic [ref=f6e39]:
+      - paragraph [ref=f6e40]: Agents
+      - button "Claude Code" [active] [ref=f6e41] [cursor=pointer]
+      - button "OpenClaw" [ref=f6e46] [cursor=pointer]
+      - button "OpenClaude" [ref=f6e50] [cursor=pointer]
+      - button "Gemini" [ref=f6e54] [cursor=pointer]
+      - button "Codex" [ref=f6e58] [cursor=pointer]
+      - button "OpenCode" [ref=f6e62] [cursor=pointer]
+      - button "Free Claude" [ref=f6e66] [cursor=pointer]
+    - generic [ref=f6e74]:
+      - paragraph [ref=f6e75]: Automation
+      - button "Memory" [ref=f6e76] [cursor=pointer]
+      - button "Scheduler" [ref=f6e83] [cursor=pointer]
+      - button "Skills" [ref=f6e90] [cursor=pointer]
+      - button "Provider Router" [ref=f6e94] [cursor=pointer]
+    - generic [ref=f6e99]:
+      - paragraph [ref=f6e100]: Productivity
+      - button "Goals" [ref=f6e101] [cursor=pointer]
+      - button "Notebook" [ref=f6e106] [cursor=pointer]
+      - button "Kanban" [ref=f6e110] [cursor=pointer]
+      - button "SEO" [ref=f6e114] [cursor=pointer]
+      - button "Video" [ref=f6e119] [cursor=pointer]
+    - generic [ref=f6e124]:
+      - paragraph
+      - button "Setup" [ref=f6e125] [cursor=pointer]
+    - generic [ref=f6e130]:
+      - generic [ref=f6e137]: Gateway
+      - generic [ref=f6e138]: API backed
+  - generic [ref=f6e139]:
+    - generic [ref=f6e140]:
+      - generic [ref=f6e141]:
+        - generic [ref=f6e142]: Workspace
+        - generic [ref=f6e145]: Claude Code
+      - generic [ref=f6e146]:
+        - generic [ref=f6e147]: MiniMax M3
+        - generic [ref=f6e148]: Hermes GW
+        - generic [ref=f6e149]: development
+        - button "Refresh runtime" [ref=f6e150] [cursor=pointer]
+    - main [ref=f6e626]:
+      - generic [ref=f6e627]:
+        - generic [ref=f6e628]:
+          - generic [ref=f6e634]:
+            - heading "Claude Code" [level=1] [ref=f6e635]
+            - generic [ref=f6e636]:
+              - generic [ref=f6e638]: missing_dependency
+              - generic [ref=f6e639]: ·
+              - generic [ref=f6e640]:
+                - text: "Provider:"
+                - strong [ref=f6e641]: Claude Code
+              - generic [ref=f6e642]: ·
+              - generic [ref=f6e643]:
+                - text: "Runtime:"
+                - strong [ref=f6e644]: NVIDIA Fallback
+          - generic [ref=f6e645]:
+            - generic [ref=f6e646]:
+              - generic [ref=f6e647]: chat
+              - generic [ref=f6e650]: code
+              - generic [ref=f6e655]: tools
+              - generic [ref=f6e658]: mcp
+            - button "Toggle sidebar" [ref=f6e664] [cursor=pointer]
+        - generic [ref=f6e668]:
+          - generic [ref=f6e669]: Good Afternoon
+          - generic [ref=f6e670]: Claude Code
+          - paragraph [ref=f6e671]: What would you like to build today?
+          - generic [ref=f6e672]:
+            - button "Review Code" [ref=f6e673] [cursor=pointer]
+            - button "Debug" [ref=f6e674] [cursor=pointer]
+            - button "Build API" [ref=f6e675] [cursor=pointer]
+            - button "Explain Repository" [ref=f6e676] [cursor=pointer]
+            - button "Fix Bug" [ref=f6e677] [cursor=pointer]
+            - button "Generate UI" [ref=f6e678] [cursor=pointer]
+        - generic [ref=f6e679]:
+          - button "Goals" [ref=f6e680] [cursor=pointer]
+          - button "SEO" [ref=f6e684] [cursor=pointer]
+          - button "Image" [ref=f6e688] [cursor=pointer]
+          - button "Video" [ref=f6e693] [cursor=pointer]
+          - button "Research" [ref=f6e697] [cursor=pointer]
+          - button "Code Review" [ref=f6e703] [cursor=pointer]
+          - button "Debug" [ref=f6e707] [cursor=pointer]
+          - button "Refactor" [ref=f6e710] [cursor=pointer]
+          - button "Generate UI" [ref=f6e716] [cursor=pointer]
+          - button "Marketing" [ref=f6e719] [cursor=pointer]
+          - button "Blog" [ref=f6e722] [cursor=pointer]
+          - button "Documentation" [ref=f6e728] [cursor=pointer]
+          - button "Workflow" [ref=f6e733] [cursor=pointer]
+          - button "API" [ref=f6e736] [cursor=pointer]
+          - button "Scraper" [ref=f6e742] [cursor=pointer]
+        - generic [ref=f6e746]:
+          - generic [ref=f6e747]:
+            - button "Attach file" [ref=f6e748] [cursor=pointer]
+            - button "Add image" [ref=f6e752] [cursor=pointer]
+            - button "Record voice" [ref=f6e757] [cursor=pointer]
+          - textbox "Ask Claude Code..." [ref=f6e762]
+          - button "Send" [disabled] [ref=f6e763]
+      - complementary [ref=f6e767]:
+        - generic [ref=f6e768]:
+          - generic [ref=f6e769]:
+            - generic [ref=f6e770]: Agent Status
+            - generic [ref=f6e775]:
+              - generic [ref=f6e776]:
+                - generic [ref=f6e777]: Connection
+                - generic [ref=f6e778]: missing_dependency
+              - generic [ref=f6e779]:
+                - generic [ref=f6e780]: Runtime
+                - generic [ref=f6e781]: NVIDIA Fallback
+              - generic [ref=f6e782]:
+                - generic [ref=f6e783]: Mode
+                - generic [ref=f6e784]: nvidia_fallback
+          - generic [ref=f6e785]:
+            - generic [ref=f6e786]: Chat Stats
+            - generic [ref=f6e790]:
+              - generic [ref=f6e791]:
+                - generic [ref=f6e792]: Messages
+                - generic [ref=f6e793]: "0"
+              - generic [ref=f6e794]:
+                - generic [ref=f6e795]: Last activity
+                - generic [ref=f6e796]: None
+          - generic [ref=f6e797]:
+            - generic [ref=f6e798]: Capabilities
+            - generic [ref=f6e802]:
+              - generic [ref=f6e803]: chat
+              - generic [ref=f6e804]: code
+              - generic [ref=f6e805]: tools
+              - generic [ref=f6e806]: mcp
+          - generic [ref=f6e807]:
+            - generic [ref=f6e808]: Actions
+            - button "Plugin matrix" [ref=f6e813] [cursor=pointer]

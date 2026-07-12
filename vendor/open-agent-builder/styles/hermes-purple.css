@@ -1,0 +1,215 @@
+/*
+ * Hermes theme layer for the vendored upstream Open Agent Builder.
+ * Keep this file isolated so the builder behavior remains upstream-clean.
+ *
+ * Strategy: Override only Builder-specific selectors, root CSS variables,
+ * and the vendor's own design tokens. Avoid touching general Tailwind
+ * utility classes (no global `*` resets, no @layer base order hacks).
+ *
+ * Color palette:
+ *   background  #120b1f
+ *   surface     #1d1433
+ *   panel       #24183f
+ *   border      #3b2465
+ *   accent      #7c3aed
+ *   text-hi     #f5f3ff
+ *   text-lo     #c4b5fd
+ */
+
+:root {
+  /* Hermes dark palette */
+  --hermes-bg:        #120b1f;
+  --hermes-surface:   #1d1433;
+  --hermes-panel:     #24183f;
+  --hermes-border:    #3b2465;
+  --hermes-accent:    #7c3aed;
+  --hermes-text-hi:   #f5f3ff;
+  --hermes-text-lo:   #c4b5fd;
+
+  /* Upstream design-token overrides (Hermes palette). */
+  --heat-4:                  rgba(124, 58, 237, 0.04);
+  --heat-8:                  rgba(124, 58, 237, 0.08);
+  --heat-12:                 rgba(124, 58, 237, 0.12);
+  --heat-16:                 rgba(124, 58, 237, 0.16);
+  --heat-20:                 rgba(124, 58, 237, 0.20);
+  --heat-40:                 rgba(124, 58, 237, 0.40);
+  --heat-90:                 rgba(124, 58, 237, 0.90);
+  --heat-100:                #7c3aed;
+  --accent-amethyst:         #c4b5fd;
+  --accent-bluetron:         #a78bfa;
+  --background-lighter:      #1d1433;
+  --border-faint:            rgba(59, 36, 101, 0.7);
+  --border-muted:            #3b2465;
+  --border-loud:             #5b3da3;
+  --accent-black:            #f5f3ff;
+  --accent-white:            #120b1f;
+  --black-alpha-4:           rgba(245, 243, 255, 0.04);
+  --black-alpha-6:           rgba(245, 243, 255, 0.06);
+  --black-alpha-12:          rgba(245, 243, 255, 0.12);
+  --black-alpha-20:          rgba(245, 243, 255, 0.20);
+  --black-alpha-32:          rgba(245, 243, 255, 0.32);
+
+  /* shadcn semantic tokens. */
+  --background:              258 50% 9%;
+  --foreground:              270 30% 95%;
+  --card:                    262 44% 18%;
+  --card-foreground:         270 30% 95%;
+  --popover:                 262 44% 18%;
+  --popover-foreground:      270 30% 95%;
+  --primary:                 262 80% 60%;
+  --primary-foreground:      0 0% 100%;
+  --secondary:               262 35% 22%;
+  --secondary-foreground:    270 30% 95%;
+  --muted:                   262 35% 22%;
+  --muted-foreground:        270 40% 80%;
+  --accent:                  262 35% 22%;
+  --accent-foreground:       270 30% 95%;
+  --destructive:             0 70% 45%;
+  --destructive-foreground:  0 0% 98%;
+  --border:                  262 50% 30%;
+  --input:                   262 50% 30%;
+  --ring:                    262 80% 60%;
+}
+
+/* Higher-specificity wins for the variables that colors.css re-binds
+   inside an @supports (P3) block on Chrome. */
+@supports (color: color(display-p3 1 1 1)) {
+  :root {
+    --background-base:         #120b1f !important;
+    --background-lighter:      #1d1433 !important;
+    --border-faint:            rgba(59, 36, 101, 0.7) !important;
+    --border-muted:            #3b2465 !important;
+    --border-loud:             #5b3da3 !important;
+    --heat-100:                #7c3aed !important;
+    --accent-black:            #f5f3ff !important;
+    --accent-white:            #120b1f !important;
+  }
+}
+
+/* --- Document chrome ---------------------------------------------------- */
+html,
+body {
+  background-color: var(--hermes-bg) !important;
+  color: var(--hermes-text-hi) !important;
+  color-scheme: dark;
+}
+html { background-color: var(--hermes-bg); }
+
+/* --- Hero / landing surfaces (Builder-specific) ------------------------- */
+.bg-background-base,
+.bg-background-lighter {
+  background-color: var(--hermes-bg) !important;
+}
+.bg-background-lighter { background-color: var(--hermes-surface) !important; }
+
+header,
+header[class*="border"],
+nav,
+.top-nav,
+.header {
+  background-color: var(--hermes-surface) !important;
+  border-color: var(--hermes-border) !important;
+  color: var(--hermes-text-hi) !important;
+}
+
+/* "Use this Template" secondary pill. */
+.bg-heat-100 {
+  background-color: var(--hermes-accent) !important;
+}
+
+/* --- Primary action buttons (Hermes accent) --------------------------- */
+button[class*="bg-orange"],
+.btn-primary,
+.btn-orange {
+  background-color: var(--hermes-accent) !important;
+  color: var(--hermes-text-hi) !important;
+  border-color: var(--hermes-accent) !important;
+}
+
+/* --- Inline-illustration grid: hide the cosmetic `#EDEDED` squares ----- */
+.curvy-rect svg rect[fill="#EDEDED"] {
+  fill: var(--hermes-border) !important;
+}
+
+/* --- shadcn dialogs (Builder-specific selectors) ----------------------- */
+[role="dialog"],
+.DialogContent {
+  background-color: var(--hermes-panel) !important;
+  color: var(--hermes-text-hi) !important;
+  border: 1px solid var(--hermes-border);
+}
+.DialogTitle,
+.DialogDescription { color: var(--hermes-text-hi) !important; }
+.FireButton {
+  background-color: var(--hermes-accent) !important;
+  color: var(--hermes-text-hi) !important;
+}
+
+/* --- React Flow canvas inside the Builder ------------------------------ */
+.react-flow,
+.react-flow.dark {
+  --xy-background-color-default: var(--hermes-bg);
+  --xy-background-pattern-dots-color-default: var(--hermes-border);
+  --xy-background-pattern-lines-color-default: var(--hermes-border);
+  --xy-background-pattern-cross-color-default: var(--hermes-border);
+  --xy-edge-stroke-default: rgba(245, 243, 255, 0.62);
+  --xy-edge-label-background-color-default: var(--hermes-panel);
+  --xy-edge-label-color-default: var(--hermes-text-hi);
+  --xy-node-border-default: 1px solid var(--hermes-border);
+  --xy-node-background-color-default: var(--hermes-panel);
+  --xy-node-color-default: var(--hermes-text-hi);
+  --xy-controls-button-background-color-default: var(--hermes-surface);
+  --xy-controls-button-background-color-hover-default: var(--hermes-panel);
+  --xy-controls-button-color-default: var(--hermes-text-hi);
+  --xy-controls-button-border-color-default: var(--hermes-border);
+  --xy-minimap-background-color-default: var(--hermes-bg);
+  --xy-minimap-mask-background-color-default: rgba(0, 0, 0, 0.6);
+  --xy-minimap-node-background-color-default: var(--hermes-panel);
+  --xy-handle-background-color-default: var(--hermes-accent);
+  --xy-handle-border-color-default: var(--hermes-text-hi);
+}
+
+.react-flow__background {
+  background-color: var(--hermes-bg) !important;
+}
+.react-flow__controls button,
+.react-flow__minimap {
+  background: var(--hermes-surface) !important;
+  border-color: var(--hermes-border) !important;
+  color: var(--hermes-text-hi) !important;
+}
+.react-flow__edge-path {
+  stroke: rgba(245, 243, 255, 0.62) !important;
+}
+.react-flow__handle {
+  border-color: var(--hermes-text-hi) !important;
+}
+
+/* --- Inputs / textareas / selects (Builder-specific) ------------------- */
+input,
+textarea,
+select {
+  background-color: var(--hermes-panel) !important;
+  color: var(--hermes-text-hi) !important;
+  border-color: var(--hermes-border) !important;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--hermes-text-lo) !important;
+}
+
+/* --- Code/pre surfaces (high-contrast panel) -------------------------- */
+code,
+pre,
+pre[class*="language-"],
+pre[class*="hljs"] {
+  background-color: var(--hermes-panel) !important;
+  color: var(--hermes-text-hi) !important;
+  border: 1px solid var(--hermes-border);
+}
+
+/* --- Scrollbars -------------------------------------------------------- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--hermes-bg); }
+::-webkit-scrollbar-thumb { background: var(--hermes-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--hermes-accent); }
