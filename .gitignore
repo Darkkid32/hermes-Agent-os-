@@ -34,5 +34,10 @@ Thumbs.db
 *.tmp
 *.cache
 
+# Test files with secrets
+test.py
+test2.py
+test*.py
+
 # Backup
 .env.example.hermes-backup
