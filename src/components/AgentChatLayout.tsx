@@ -33,6 +33,7 @@ import agentIcons from "../services/agentIcons";
 import { getGreeting } from "../services/greeting";
 import type { IntegrationSnapshot } from "../types";
 import { ExecutionBus, type ExecutionBusEvent, type ExecutionEventType, subscribeExecutionEvents } from "../hermes/ExecutionEventBusBridge";
+import { getResultsByAgent, onResultsUpdate, type ExecutionResult } from "../hermes/ExecutionResults";
 
 // ── Quick action chips ───────────────────────────────────────────────
 const quickActions = [
@@ -500,6 +501,87 @@ export default function AgentChatLayout({
     return () => {
       unsubscribe();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  // ── Restore completed executions from shared runtime ─────────
+  // On mount, reads ExecutionResults for this agent and merges any
+  // completed executions into chatHistory. Preserves existing local
+  // history and prevents duplicates.
+  useEffect(() => {
+    const agentResults = getResultsByAgent(id);
+    if (agentResults.length === 0) return;
+
+    setChatHistory((current) => {
+      const existing = [...current];
+      const existingPrompts = new Set(
+        existing
+          .filter((m) => m.role === "user")
+          .map((m) => m.content.slice(0, 80))
+      );
+
+      for (const result of agentResults) {
+        if (existingPrompts.has(result.prompt.slice(0, 80))) continue;
+
+        existing.push(
+          { role: "user", content: result.prompt, timestamp: result.timestamp },
+          {
+            role: "assistant",
+            content: result.rawResponse || "(no output)",
+            mode: "pipeline",
+            timestamp: result.timestamp + 1
+          }
+        );
+        existingPrompts.add(result.prompt.slice(0, 80));
+      }
+
+      existing.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+      try {
+        window.localStorage.setItem(storageKey, JSON.stringify(existing));
+      } catch {}
+      return existing;
+    });
+
+    const unsubscribe = onResultsUpdate((allResults) => {
+      const agentResults = allResults.filter((r) => r.agentId === id);
+      if (agentResults.length === 0) return;
+
+      setChatHistory((current) => {
+        const existing = [...current];
+        const existingPrompts = new Set(
+          existing
+            .filter((m) => m.role === "user")
+            .map((m) => m.content.slice(0, 80))
+        );
+
+        let changed = false;
+        for (const result of agentResults) {
+          if (existingPrompts.has(result.prompt.slice(0, 80))) continue;
+          existing.push(
+            { role: "user", content: result.prompt, timestamp: result.timestamp },
+            {
+              role: "assistant",
+              content: result.rawResponse || "(no output)",
+              mode: "pipeline",
+              timestamp: result.timestamp + 1
+            }
+          );
+          existingPrompts.add(result.prompt.slice(0, 80));
+          changed = true;
+        }
+
+        if (!changed) return current;
+
+        existing.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+        try {
+          window.localStorage.setItem(storageKey, JSON.stringify(existing));
+        } catch {}
+        return existing;
+      });
+    });
+
+    return () => { unsubscribe(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
