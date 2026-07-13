@@ -1,6 +1,7 @@
 import type { BusinessAgent } from "./BusinessAgent";
 import type { ExecutionEngineId } from "./BusinessAgent";
 import type { ExecutionEvent } from "./ExecutionAdapter";
+import { ExecutionBus } from "./ExecutionEventBus";
 
 export interface ExecutionResult {
   id: string;
@@ -123,7 +124,7 @@ function formatMarkdown(raw: string): string {
   return md.trim();
 }
 
-function extractArtifacts(raw: string, agentName: string): WorkspaceArtifact[] {
+export function extractArtifacts(raw: string, agentName: string): WorkspaceArtifact[] {
   const artifacts: WorkspaceArtifact[] = [];
   const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
   let match;
@@ -211,6 +212,35 @@ export function storeResult(
 
   results.set(id, result);
   emitResults();
+
+  // Emit artifact_created events for each extracted artifact
+  for (const artifact of artifacts) {
+    ExecutionBus.emit(ExecutionBus.createEvent(
+      "artifact_created",
+      id,
+      context.workspaceId,
+      agent.name,
+      "completed",
+      `Artifact "${artifact.name}" created`,
+      100,
+      { artifactName: artifact.name, artifactType: artifact.type, artifactSize: artifact.size }
+    ));
+  }
+
+  // Emit workspace_updated for the batch
+  if (artifacts.length > 0) {
+    ExecutionBus.emit(ExecutionBus.createEvent(
+      "workspace_updated",
+      id,
+      context.workspaceId,
+      agent.name,
+      "completed",
+      `${artifacts.length} artifact(s) added to workspace`,
+      100,
+      { artifactCount: artifacts.length }
+    ));
+  }
+
   return result;
 }
 

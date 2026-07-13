@@ -3,20 +3,17 @@ import https from "node:https";
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
 const MODEL_MAP = {
-  claude: "meta/llama-3.1-70b-instruct",
-  gemini: "google/gemma-2-2b-it",
-  codex: "meta/llama-3.1-8b-instruct",
-  openclaw: "nvidia/nemotron-mini-4b-instruct",
-  opencode: "nvidia/nemotron-mini-4b-instruct",
-  "free-claude-code": "meta/llama-3.1-8b-instruct"
+  claude: "minimax/minimax-m3-2402",
+  gemini: "minimax/minimax-m3-2402",
+  codex: "minimax/minimax-m3-2402",
+  openclaw: "minimax/minimax-m3-2402",
+  opencode: "minimax/minimax-m3-2402",
+  "free-claude-code": "minimax/minimax-m3-2402"
 };
 
 // Per-model limits to prevent server crashes and token over-runs.
 const MODEL_LIMITS = {
-  "meta/llama-3.1-70b-instruct": { maxTokens: 4096, temperatureMax: 2.0 },
-  "google/gemma-2-2b-it": { maxTokens: 4096, temperatureMax: 2.0 },
-  "meta/llama-3.1-8b-instruct": { maxTokens: 4096, temperatureMax: 2.0 },
-  "nvidia/nemotron-mini-4b-instruct": { maxTokens: 512, temperatureMax: 1.0 }
+  "minimax/minimax-m3-2402": { maxTokens: 4096, temperatureMax: 2.0 }
 };
 
 const MAX_MESSAGES = 50;

@@ -1,6 +1,6 @@
 import type { BrainPlan } from "./HermesBrain";
 import { createTimeline, addEvent, type Timeline, type TimelineEvent } from "./TimelineService";
-import { createWorkspace, type Workspace } from "./WorkspaceService";
+import { createWorkspace, addWorkspaceFiles, type Workspace, type WorkspaceFile } from "./WorkspaceService";
 import { createGoal, type Goal } from "./GoalService";
 import { createNotebookEntry, type NotebookEntry } from "./NotebookService";
 import { createKanbanBoard, type KanbanBoard } from "./KanbanService";
@@ -184,6 +184,13 @@ export function updateNotebook(updates: Partial<import("./NotebookService").Note
   if (!state.notebook) return;
   state.notebook = { ...state.notebook, ...updates };
   addEvent(state.timeline, "notebook", "updated", "Notebook updated");
+  emit();
+}
+
+export function addFilesToWorkspace(files: WorkspaceFile[]): void {
+  if (!state.workspace) return;
+  state.workspace = addWorkspaceFiles(state.workspace, files);
+  addEvent(state.timeline, "workspace", "updated", `${files.length} file(s) added to workspace`);
   emit();
 }
 

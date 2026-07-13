@@ -13,28 +13,42 @@ import {
   Eye,
   EyeOff,
   AlertTriangle,
-  Loader2
+  Loader2,
+  FileCode2,
+  Copy,
+  Code2
 } from "lucide-react";
 import {
   getExecutionStats,
   getAllLogs,
   type ExecutionLog
 } from "../hermes/BusinessAgentRuntime";
+import {
+  getAllResults,
+  onResultsUpdate,
+  type ExecutionResult
+} from "../hermes/ExecutionResults";
 
 export function ExecutionResultsPage() {
-  const [results, setResults] = useState<ExecutionLog[]>([]);
+  const [results, setResults] = useState<ExecutionResult[]>([]);
+  const [logs, setLogs] = useState<ExecutionLog[]>([]);
   const [filter, setFilter] = useState<"all" | "completed" | "failed">("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showRaw, setShowRaw] = useState(false);
 
   useEffect(() => {
     loadResults();
-    const interval = setInterval(loadResults, 5000);
-    return () => clearInterval(interval);
+    loadLogs();
+    const unsubscribe = onResultsUpdate(() => loadResults());
+    const interval = setInterval(() => { loadResults(); loadLogs(); }, 5000);
+    return () => { unsubscribe(); clearInterval(interval); };
   }, []);
 
   function loadResults() {
-    setResults(getAllLogs());
+    setResults(getAllResults());
+  }
+  function loadLogs() {
+    setLogs(getAllLogs());
   }
 
   const filtered = results.filter((r) => {
@@ -66,6 +80,31 @@ export function ExecutionResultsPage() {
       default:
         return <AlertTriangle size={16} className="text-zinc-500" />;
     }
+  }
+
+  function renderArtifacts(artifacts: ExecutionResult["artifacts"]) {
+    if (!artifacts || artifacts.length === 0) return null;
+    return (
+      <div className="artifacts-section">
+        <h4 className="artifacts-title">Artifacts ({artifacts.length})</h4>
+        <div className="artifacts-grid">
+          {artifacts.map((a) => (
+            <div key={a.id} className="artifact-card">
+              <div className="artifact-header">
+                <Code2 size={14} />
+                <span className="artifact-name">{a.name}</span>
+                <span className="artifact-type">{a.type}</span>
+                <span className="artifact-size">{(a.size / 1024).toFixed(1)} KB</span>
+              </div>
+              <pre className="artifact-preview">{a.content.slice(0, 500)}</pre>
+              <button className="artifact-copy" onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(a.content); }}>
+                <Copy size={12} /> Copy
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -120,7 +159,7 @@ export function ExecutionResultsPage() {
             </button>
           ))}
         </div>
-        <button className="btn-refresh" onClick={loadResults}>
+        <button className="btn-refresh" onClick={() => { loadResults(); loadLogs(); }}>
           <RefreshCw size={14} /> Refresh
         </button>
       </div>
@@ -145,7 +184,7 @@ export function ExecutionResultsPage() {
                 <div className="result-info">
                   {getStatusIcon(result.status)}
                   <span className="result-agent">{result.agentName}</span>
-                  <span className="result-engine">{result.engine}</span>
+                  <span className="result-engine">{result.engineLabel}</span>
                 </div>
                 <div className="result-meta">
                   <span className="result-duration">
@@ -155,7 +194,7 @@ export function ExecutionResultsPage() {
                     {result.tokens.toLocaleString()} tokens
                   </span>
                   <span className="result-time">
-                    {formatDate(result.startTime)}
+                    {formatDate(result.timestamp)}
                   </span>
                   {expandedId === result.id ? (
                     <ChevronUp size={16} />
@@ -190,8 +229,11 @@ export function ExecutionResultsPage() {
                     </button>
                   </div>
                   <div className="result-output">
-                    <pre>{result.output || result.error || "No output"}</pre>
+                    <pre>
+                      {showRaw ? result.rawResponse : result.formattedMarkdown}
+                    </pre>
                   </div>
+                  {renderArtifacts(result.artifacts)}
                 </div>
               )}
             </div>

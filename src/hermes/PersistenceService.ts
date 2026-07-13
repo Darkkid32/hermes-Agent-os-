@@ -53,8 +53,12 @@ export function loadState(): Partial<HermesState> | null {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PersistedState;
+    const workspace = parsed.workspace || null;
+    if (workspace && !workspace.files) {
+      workspace.files = [];
+    }
     return {
-      workspace: parsed.workspace || null,
+      workspace,
       goal: parsed.goal || null,
       notebook: parsed.notebook || null,
       kanban: parsed.kanban || null,

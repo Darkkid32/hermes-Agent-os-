@@ -1,5 +1,14 @@
 import type { BrainPlan } from "./HermesBrain";
 
+export interface WorkspaceFile {
+  id: string;
+  name: string;
+  type: string;
+  content: string;
+  size: number;
+  createdAt: number;
+}
+
 export interface Workspace {
   id: string;
   title: string;
@@ -9,6 +18,7 @@ export interface Workspace {
   timeline: string[];
   activeAgents: string[];
   modules: string[];
+  files: WorkspaceFile[];
 }
 
 let wsCounter = 0;
@@ -30,6 +40,14 @@ export function createWorkspace(plan: BrainPlan): Workspace {
     goal: plan.goal,
     timeline: [],
     activeAgents: agents,
-    modules
+    modules,
+    files: []
+  };
+}
+
+export function addWorkspaceFiles(ws: Workspace, files: WorkspaceFile[]): Workspace {
+  return {
+    ...ws,
+    files: [...ws.files, ...files]
   };
 }

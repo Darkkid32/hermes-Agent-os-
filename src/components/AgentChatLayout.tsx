@@ -29,10 +29,10 @@ import {
   Trash2
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from "react";
-import { sendAgentMessage } from "../api";
 import agentIcons from "../services/agentIcons";
 import { getGreeting } from "../services/greeting";
 import type { IntegrationSnapshot } from "../types";
+import { ExecutionBus, type ExecutionBusEvent, type ExecutionEventType, subscribeExecutionEvents } from "../hermes/ExecutionEventBusBridge";
 
 // ── Quick action chips ───────────────────────────────────────────────
 const quickActions = [
@@ -72,6 +72,58 @@ function runtimeBadge(mode: string): { label: string; tone: string } {
   if (mode === "cli") return { label: "CLI", tone: "ok" };
   if (mode === "nvidia_fallback") return { label: "NVIDIA", tone: "ok" };
   return { label: "Unavailable", tone: "warn" };
+}
+
+// ── Format execution event for chat display ──────────────────────────
+function formatExecutionEvent(event: ExecutionBusEvent): string | null {
+  const prefix = getAgentEmoji(event.agentName);
+  switch (event.type) {
+    case "execution_created":
+      return `${prefix} **${event.agentName}** — Task queued`;
+    case "execution_started":
+      return `${prefix} **${event.agentName}** — ${event.message}`;
+    case "agent_started":
+      return `${prefix} **${event.agentName}** — Starting...\n\n${event.message}`;
+    case "agent_progress":
+      return `${prefix} **${event.agentName}** — ${event.message}`;
+    case "agent_stream":
+      if (typeof event.metadata?.chunk === "string") {
+        return `${prefix} **${event.agentName}** — ${event.metadata.chunk}`;
+      }
+      return null;
+    case "agent_finished":
+      return `${prefix} **${event.agentName}** — Finished${event.metadata?.tokens ? ` (${event.metadata.tokens} tokens, ${event.metadata.duration}ms)` : ""}`;
+    case "review_started":
+      return `\ud83d\udd0d **Code Review** — ${event.message}`;
+    case "review_finished":
+      return `\ud83d\udd0d **Code Review** — Complete${event.metadata?.tokens ? ` (${event.metadata.tokens} tokens)` : ""}`;
+    case "qa_started":
+      return `\u2713 **QA Pass** — ${event.message}`;
+    case "qa_finished":
+      return `\u2713 **QA Pass** — Complete`;
+    case "workspace_updated":
+      return `\ud83d\udcbe **Workspace** — ${event.message}`;
+    case "artifact_created": {
+      const name = event.metadata?.name as string | undefined;
+      return name ? `\ud83d\udcce **Artifact** — ${name} created` : null;
+    }
+    case "execution_completed":
+      return `\u2705 **${event.agentName}** — ${event.message}`;
+    case "execution_failed":
+      return `\u274c **${event.agentName}** — ${event.message}`;
+    default:
+      return null;
+  }
+}
+
+function getAgentEmoji(agentName: string): string {
+  const lower = agentName.toLowerCase();
+  if (lower.includes("claude")) return "\ud83e\udd16";
+  if (lower.includes("gemini")) return "\u2728";
+  if (lower.includes("opencode") || lower.includes("openclaw")) return "\ud83d\udcbb";
+  if (lower.includes("codex")) return "\ud83d\udcdd";
+  if (lower.includes("brain")) return "\ud83e\udde0";
+  return "\ud83d\udcac";
 }
 
 // ── Capability icon helper ───────────────────────────────────────────
@@ -390,6 +442,67 @@ export default function AgentChatLayout({
     return () => { abortRef.current?.abort(); };
   }, []);
 
+  // ── ExecutionEventBus subscription ────────────────────────────
+  // Subscribes to live execution events and renders them as system
+  // messages in the chat, so the user can see every step of the
+  // pipeline (queued, executing, agent_progress, agent_finished,
+  // review_started, qa_started, completed/failed) without leaving
+  // the chat page.
+  useEffect(() => {
+    const trackedExecutionIds = new Set<string>();
+
+    const unsubscribe = subscribeExecutionEvents((event) => {
+      // Track new executions
+      if (!trackedExecutionIds.has(event.executionId)) {
+        trackedExecutionIds.add(event.executionId);
+      }
+
+      // Only show events relevant to this agent's chain
+      const isRelevantAgent =
+        event.agentName.toLowerCase().includes("claude") ||
+        event.agentName.toLowerCase().includes("gemini") ||
+        event.agentName.toLowerCase().includes("opencode") ||
+        event.agentName.toLowerCase().includes("openclaw") ||
+        event.agentName.toLowerCase().includes("codex") ||
+        event.agentName.toLowerCase().includes("brain");
+
+      if (!isRelevantAgent) return;
+
+      setChatHistory((current) => {
+        // Format event into a system message
+        const systemMsg = formatExecutionEvent(event);
+        if (!systemMsg) return current;
+
+        // Avoid duplicate messages by checking for latest event of same type+execution
+        const lastMsg = current[current.length - 1];
+        if (
+          lastMsg &&
+          lastMsg.role === "assistant" &&
+          lastMsg.content === systemMsg &&
+          lastMsg.timestamp &&
+          Date.now() - lastMsg.timestamp < 500
+        ) {
+          return current;
+        }
+
+        const next = [...current, {
+          role: "assistant" as const,
+          content: systemMsg,
+          timestamp: Date.now()
+        }];
+        try {
+          window.localStorage.setItem(storageKey, JSON.stringify(next));
+        } catch {}
+        return next;
+      });
+    });
+
+    return () => {
+      unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
   // ── Auto-growing textarea ──────────────────────────────────────
   const handleTextareaChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
@@ -424,18 +537,42 @@ export default function AgentChatLayout({
     });
 
     try {
-      const result = await sendAgentMessage(
-        integration!.id === "free-claude-code" ? "claude" : integration!.id,
-        userText,
-        ac.signal
-      );
+      const { think } = await import("../hermes/HermesBrain");
+      const { loadAgents } = await import("../hermes/AgentStore");
+      const { getState } = await import("../hermes/IntegrationManager");
+      const { executeTask } = await import("../hermes/BusinessAgentRuntime");
+
+      const agents = loadAgents();
+      const plan = think(userText, agents);
+      const state = getState();
+
+      let agent = agents.find((a) => a.id === integration!.id);
+      if (!agent) {
+        agent = agents[0] || agents.find((a) => a.id === "claude");
+      }
+
+      if (!agent) {
+        throw new Error("No agent available to execute this task.");
+      }
+
+      const executionPromise = executeTask(agent, plan, state, { autoApprove: true });
+
+      const timeoutMs = 120000;
+      const result = await Promise.race([
+        executionPromise,
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error(`Execution timed out after ${timeoutMs / 1000}s`)), timeoutMs)
+        )
+      ]);
+
+      const replyContent = result.output || "(no output)";
       setChatHistory((current) => {
         const next = [
           ...current,
           {
             role: "assistant" as const,
-            content: result.reply || "(no reply)",
-            mode: result.mode,
+            content: replyContent,
+            mode: "pipeline",
             timestamp: Date.now()
           }
         ];
