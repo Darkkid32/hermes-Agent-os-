@@ -697,7 +697,7 @@ export default function HermesHome({
     if (plan.capabilityAnalysis.topMatch) {
       const agent = plan.capabilityAnalysis.topMatch.agent;
       const state = getState();
-      await executeTask(agent, plan, state);
+      await executeTask(agent, plan, state, { autoApprove: true });
       setExecLogs(getAllLogs());
       setExecStats(getExecutionStats());
     }
