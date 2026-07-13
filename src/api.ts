@@ -60,12 +60,13 @@ export function testIntegration(id: string) {
   });
 }
 
-export function sendAgentMessage(id: string, message: string) {
+export function sendAgentMessage(id: string, message: string, signal?: AbortSignal) {
   return request<{ ok: boolean; mode: string; reply: string; plannedCommand?: string }>(
     `/api/modules/${id}/run`,
     {
       method: "POST",
-      body: JSON.stringify({ message })
+      body: JSON.stringify({ message }),
+      signal
     }
   );
 }

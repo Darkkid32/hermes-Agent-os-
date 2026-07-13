@@ -6,6 +6,8 @@ import {
   createSelfModuleItem
 } from "./api";
 import AgentChatLayout from "./components/AgentChatLayout";
+import Metric from "./components/ui/Metric";
+import { statusLabel } from "./components/ui/statusLabel";
 import type { Integration, IntegrationSnapshot, Health, SelfModuleState } from "./types";
 
 import Sidebar, { allNavItems } from "./pages/Sidebar";
@@ -108,22 +110,6 @@ function itemDetail(item: any) {
     item.estimatedCost != null ? `$${Number(item.estimatedCost).toFixed(4)}` : ""
   ].filter(Boolean);
   return parts.join(" / ") || "local item";
-}
-
-function statusLabel(status: string) {
-  if (status === "ready_to_connect") return "Ready";
-  if (status === "ready_to_configure") return "Configure";
-  if (status === "missing_dependency") return "Missing";
-  return status;
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="metric">
-      <span>{label}</span>
-      <b title={value}>{value}</b>
-    </div>
-  );
 }
 
 function SelfModuleControl({
@@ -327,6 +313,15 @@ export default function App() {
   const [drawer, setDrawer] = useState<Integration | null>(null);
   const sectionLabel = currentSectionLabel(selected);
   const selectedModule = Boolean(snapshot?.integrations.some((item) => item.id === selected));
+
+  // BUG #1: Scroll reset on navigation
+  useEffect(() => {
+    const workspace = document.querySelector(".workspace");
+    if (workspace) workspace.scrollTop = 0;
+    const content = document.querySelector(".content");
+    if (content) content.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }, [selected]);
 
   return (
     <div className="app-shell">

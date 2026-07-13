@@ -8,6 +8,7 @@ process.on("uncaughtException", (err) => {
 
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import { Readable } from "node:stream";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -69,6 +70,7 @@ import { verifyExecution, formatVerificationReport } from "./runtime/verificatio
 import { executeAllowedCommand, isCommandAllowed, ALLOWED_COMMANDS } from "./runtime/terminal-executor.js";
 import { orchestrate, getOrchestration, listOrchestrations, approveOrchestration, generateOrchestrationReport } from "./runtime/orchestrator.js";
 import { handleLlmExecute } from "./runtime/llm-proxy.js";
+import { createAuthMiddleware, createRateLimitMiddleware } from "./runtime/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -78,8 +80,30 @@ const app = express();
 const port = Number(process.env.PORT || 4173);
 const originalBuilderUrl = getBuilderUrl();
 
-app.use(cors());
+const allowedOrigins = (process.env.HERMES_ALLOWED_ORIGINS || "http://127.0.0.1:4173,http://localhost:4173")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
+
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error("CORS not allowed for origin: " + origin));
+  },
+  credentials: false,
+  maxAge: 3600
+}));
+
 app.use(express.json({ limit: "2mb" }));
+app.use(createAuthMiddleware());
+
+const llmRateLimit = createRateLimitMiddleware();
 
 app.get("/api/health", async (_req, res, next) => {
   try {
@@ -615,7 +639,7 @@ app.get("/api/workflows/:id/runs/:runId", async (req, res, next) => {
   }
 });
 
-app.post("/api/llm/execute", handleLlmExecute);
+app.post("/api/llm/execute", llmRateLimit, handleLlmExecute);
 
 app.post("/api/admin/export/prepare", async (req, res, next) => {
   try {

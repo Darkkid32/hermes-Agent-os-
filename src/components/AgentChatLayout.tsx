@@ -2,19 +2,14 @@ import {
   Bot,
   BrainCircuit,
   ChevronDown,
-  Clock,
   Code2,
   Copy,
-  Cpu,
   FileCode2,
-  Gem,
   Globe2,
   Image as ImageIcon,
   Loader2,
   MessageSquare,
-  Mic,
   Paperclip,
-  PlugZap,
   RefreshCw,
   Search,
   Send,
@@ -25,25 +20,19 @@ import {
   Check,
   CircleDot,
   Gauge,
-  ChevronUp
+  ChevronUp,
+  ArrowDown,
+  Bookmark,
+  Pin,
+  Download,
+  RotateCcw,
+  Trash2
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, memo } from "react";
 import { sendAgentMessage } from "../api";
+import agentIcons from "../services/agentIcons";
+import { getGreeting } from "../services/greeting";
 import type { IntegrationSnapshot } from "../types";
-
-// ── Markdown fallback ────────────────────────────────────────────────
-const MarkdownFallback = ({ children }: { children: string }) => <p>{children}</p>;
-
-// ── Agent icon mapping ───────────────────────────────────────────────
-const agentIcons: Record<string, any> = {
-  claude: TerminalSquare,
-  openclaw: Bot,
-  openclaude: Sparkles,
-  gemini: Gem,
-  codex: Code2,
-  opencode: FileCode2,
-  "free-claude-code": PlugZap
-};
 
 // ── Quick action chips ───────────────────────────────────────────────
 const quickActions = [
@@ -64,14 +53,14 @@ const quickActions = [
   { label: "Scraper", icon: Search, prompt: "Build a web scraper for " }
 ];
 
-// ── Time-of-day greeting ─────────────────────────────────────────────
-function getGreeting(): string {
-  const h = new Date().getHours();
-  if (h < 6) return "Good Night";
-  if (h < 12) return "Good Morning";
-  if (h < 17) return "Good Afternoon";
-  return "Good Evening";
-}
+// ── Streaming status messages ────────────────────────────────────────
+const streamingMessages = [
+  "Thinking...",
+  "Planning...",
+  "Generating...",
+  "Processing...",
+  "Analyzing..."
+];
 
 // ── Format timestamp ─────────────────────────────────────────────────
 function formatTime(date: Date): string {
@@ -81,11 +70,11 @@ function formatTime(date: Date): string {
 // ── Runtime badge ────────────────────────────────────────────────────
 function runtimeBadge(mode: string): { label: string; tone: string } {
   if (mode === "cli") return { label: "CLI", tone: "ok" };
-  if (mode === "nvidia_fallback") return { label: "NVIDIA Fallback", tone: "ok" };
+  if (mode === "nvidia_fallback") return { label: "NVIDIA", tone: "ok" };
   return { label: "Unavailable", tone: "warn" };
 }
 
-// ── Capability chip helper ───────────────────────────────────────────
+// ── Capability icon helper ───────────────────────────────────────────
 function capabilityIcon(cap: string): any {
   const lower = cap.toLowerCase();
   if (lower.includes("code") || lower.includes("terminal")) return Code2;
@@ -100,7 +89,10 @@ function capabilityIcon(cap: string): any {
 // ── Markdown Code Block ──────────────────────────────────────────────
 function CodeBlock({ children, ...props }: any) {
   const [copied, setCopied] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const codeText = typeof children === "string" ? children : String(children).trim();
+  const lineCount = codeText.split("\n").length;
+  const lang = props.className?.replace("language-", "") || "code";
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(codeText);
@@ -108,23 +100,39 @@ function CodeBlock({ children, ...props }: any) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Add line numbers
+  const lines = codeText.split("\n");
+  const numberedCode = lines.map((line: string, i: number) => (
+    <span key={i} className="code-line">{line || " "}</span>
+  )).join("");
+
   return (
     <div className="code-block-wrap">
       <div className="code-block-header">
-        <span className="code-block-lang">{props.className?.replace("language-", "") || "code"}</span>
-        <button className="code-copy-btn" onClick={handleCopy}>
-          {copied ? <Check size={14} /> : <Copy size={14} />}
-          {copied ? "Copied" : "Copy"}
-        </button>
+        <span className="code-block-lang">{lang}</span>
+        <div className="code-block-actions">
+          {lineCount > 20 && (
+            <button
+              className="code-collapse-btn"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              {collapsed ? "Expand" : "Collapse"}
+            </button>
+          )}
+          <button className="code-copy-btn" onClick={handleCopy}>
+            {copied ? <Check size={13} /> : <Copy size={13} />}
+            {copied ? "Copied" : "Copy"}
+          </button>
+        </div>
       </div>
-      <pre className="code-block-pre">
-        <code {...props}>{children}</code>
+      <pre className={`code-block-pre ${collapsed ? "collapsed" : ""}`}>
+        <code dangerouslySetInnerHTML={{ __html: numberedCode }} />
       </pre>
     </div>
   );
 }
 
-// ── Markdown lazy loader hook ─────────────────────────────────────────
+// ── Markdown lazy loader hook ────────────────────────────────────────
 function useMarkdown() {
   const [md, setMd] = useState<any>(null);
   const [hl, setHl] = useState<any>(null);
@@ -132,7 +140,7 @@ function useMarkdown() {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      import("react-markdown").then((m) => m.default).catch(() => MarkdownFallback),
+      import("react-markdown").then((m) => m.default).catch(() => null),
       import("rehype-highlight").then((m) => m.default).catch(() => null)
     ]).then(([markdown, highlight]) => {
       if (!cancelled) {
@@ -147,6 +155,22 @@ function useMarkdown() {
 }
 
 // ── Markdown Renderer ────────────────────────────────────────────────
+const MarkdownCodeOverride = memo(function MarkdownCodeOverride(props: any) {
+  const { className, children, ...rest } = props;
+  const isBlock = typeof className === "string" && className.startsWith("language-");
+  if (isBlock) {
+    return <CodeBlock className={className}>{children}</CodeBlock>;
+  }
+  return <code className="inline-code" {...rest}>{children}</code>;
+});
+
+const MarkdownPreOverride = ({ children }: any) => <>{children}</>;
+
+const MARKDOWN_COMPONENTS = {
+  code: MarkdownCodeOverride,
+  pre: MarkdownPreOverride
+};
+
 function RenderedMarkdown({ content }: { content: string }) {
   const { MarkdownComp, mdHighlight } = useMarkdown();
   if (!MarkdownComp) return <p>{content}</p>;
@@ -154,23 +178,104 @@ function RenderedMarkdown({ content }: { content: string }) {
     <div className="markdown-body">
       <MarkdownComp
         rehypePlugins={mdHighlight ? [mdHighlight] : []}
-        components={{
-          code: (props: any) => {
-            const { className, children, ...rest } = props;
-            const isBlock = className?.startsWith("language-");
-            if (isBlock) {
-              return <CodeBlock className={className}>{children}</CodeBlock>;
-            }
-            return <code className="inline-code" {...rest}>{children}</code>;
-          },
-          pre: ({ children }: any) => <>{children}</>
-        }}
+        components={MARKDOWN_COMPONENTS}
       >
         {content}
-      </MarkdownComp>
-    </div>
+     </MarkdownComp>
+   </div>
   );
 }
+
+// ── Chat Message Component ───────────────────────────────────────────
+const ChatMessage = memo(function ChatMessage({
+  entry,
+  idx,
+  isUser,
+  integrationLabel,
+  Icon,
+  onCopy,
+  copiedIdx,
+  onRetry,
+  onBookmark,
+  onPin
+}: {
+  entry: { role: "user" | "assistant"; content: string; mode?: string; timestamp?: number };
+  idx: number;
+  isUser: boolean;
+  integrationLabel: string;
+  Icon: any;
+  onCopy: (content: string, idx: number) => void;
+  copiedIdx: number | null;
+  onRetry?: () => void;
+  onBookmark?: () => void;
+  onPin?: () => void;
+}) {
+  return (
+    <div className={`ac-msg ${isUser ? "ac-msg-user" : "ac-msg-assistant"}`}>
+      {!isUser && (
+        <div className="ac-msg-avatar">
+          <Icon size={16} />
+       </div>
+      )}
+      <div className={`ac-msg-card ${isUser ? "ac-msg-card-user" : "ac-msg-card-assistant"}`}>
+        <div className="ac-msg-header">
+          <span className="ac-msg-label">
+            {isUser ? "You" : integrationLabel}
+         </span>
+          {entry.mode && entry.mode !== "nvidia_fallback" && (
+            <span className="ac-msg-mode">{entry.mode}</span>
+          )}
+          {entry.timestamp && (
+            <span className="ac-msg-time">{formatTime(new Date(entry.timestamp))}</span>
+          )}
+       </div>
+        <div className="ac-msg-body">
+          {isUser ? (
+            <p className="ac-msg-text">{entry.content}</p>
+          ) : (
+            <RenderedMarkdown content={entry.content} />
+          )}
+       </div>
+        {!isUser && (
+          <div className="ac-msg-actions">
+            <button
+              className="ac-msg-action"
+              onClick={() => onCopy(entry.content, idx)}
+              title="Copy"
+            >
+              <span className="ac-msg-action-icon">
+                {copiedIdx === idx ? <Check size={13} /> : <Copy size={13} />}
+             </span>
+              {copiedIdx === idx ? "Copied" : "Copy"}
+           </button>
+            {onRetry && (
+              <button className="ac-msg-action" onClick={onRetry} title="Retry">
+                <span className="ac-msg-action-icon"><RotateCcw size={13} /></span>
+                Retry
+             </button>
+            )}
+            {onBookmark && (
+              <button className="ac-msg-action" onClick={onBookmark} title="Bookmark">
+                <span className="ac-msg-action-icon"><Bookmark size={13} /></span>
+                Save
+             </button>
+            )}
+            {onPin && (
+              <button className="ac-msg-action" onClick={onPin} title="Pin">
+                <span className="ac-msg-action-icon"><Pin size={13} /></span>
+                Pin
+             </button>
+            )}
+            <button className="ac-msg-action" title="Export">
+              <span className="ac-msg-action-icon"><Download size={13} /></span>
+              Export
+           </button>
+         </div>
+        )}
+     </div>
+   </div>
+  );
+});
 
 // ── Main Component ───────────────────────────────────────────────────
 export default function AgentChatLayout({
@@ -187,7 +292,6 @@ export default function AgentChatLayout({
   }, [id, snapshot]);
 
   const [message, setMessage] = useState("");
-  const [reply, setReply] = useState<string | null>(null);
   const storageKey = `hermes-chat-${id}`;
   const [chatHistory, setChatHistory] = useState<
     { role: "user" | "assistant"; content: string; mode?: string; timestamp?: number }[]
@@ -205,8 +309,15 @@ export default function AgentChatLayout({
   const [busy, setBusy] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [streamingMsg, setStreamingMsg] = useState("");
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
 
+  const chatAreaRef = useRef<HTMLDivElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isUserScrollingRef = useRef(false);
+  const streamingMsgIdx = useRef(0);
+  const abortRef = useRef<AbortController | null>(null);
 
   const executionMode = useMemo(
     () =>
@@ -223,28 +334,87 @@ export default function AgentChatLayout({
     [integration, snapshot]
   );
 
-  useEffect(() => {
+  // ── Auto-scroll logic ──────────────────────────────────────────
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+      chatEndRef.current.scrollIntoView({ behavior });
     }
-  }, [chatHistory]);
+  }, []);
 
-  if (!integration) {
-    return (
-      <main className="ac-layout">
-        <div className="ac-empty-state">
-          <p>Connector not found.</p>
-        </div>
-      </main>
-    );
-  }
+  const isNearBottom = useCallback(() => {
+    const el = chatAreaRef.current;
+    if (!el) return true;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 150;
+  }, []);
 
-  // ── Functions (preserved from original) ──────────────────────────
+  // Handle scroll events
+  useEffect(() => {
+    const el = chatAreaRef.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      const nearBottom = isNearBottom();
+      setShowScrollBtn(!nearBottom);
+      isUserScrollingRef.current = !nearBottom;
+    };
+
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [isNearBottom]);
+
+  // Auto-scroll when new messages arrive (only if near bottom)
+  useEffect(() => {
+    if (chatHistory.length > 0 && isNearBottom()) {
+      scrollToBottom();
+    }
+  }, [chatHistory, isNearBottom, scrollToBottom]);
+
+  // ── Streaming message animation ────────────────────────────────
+  useEffect(() => {
+    if (!busy) {
+      setStreamingMsg("");
+      streamingMsgIdx.current = 0;
+      return;
+    }
+
+    const interval = setInterval(() => {
+      streamingMsgIdx.current = (streamingMsgIdx.current + 1) % streamingMessages.length;
+      setStreamingMsg(streamingMessages[streamingMsgIdx.current]);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [busy]);
+
+  // ── Abort in-flight requests on unmount ──────────────────────
+  useEffect(() => {
+    return () => { abortRef.current?.abort(); };
+  }, []);
+
+  // ── Auto-growing textarea ──────────────────────────────────────
+  const handleTextareaChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+    const textarea = e.target;
+    textarea.style.height = "auto";
+    textarea.style.height = Math.min(textarea.scrollHeight, 200) + "px";
+  }, []);
+
+  // ── Send message ───────────────────────────────────────────────
   async function send() {
-    if (!message.trim()) return;
+    if (!message.trim() || busy) return;
     const userText = message;
     setMessage("");
     setBusy(true);
+
+    // Abort any in-flight request
+    abortRef.current?.abort();
+    const ac = new AbortController();
+    abortRef.current = ac;
+
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+
     setChatHistory((current) => {
       const next = [...current, { role: "user" as const, content: userText, timestamp: Date.now() }];
       try {
@@ -252,12 +422,13 @@ export default function AgentChatLayout({
       } catch {}
       return next;
     });
+
     try {
       const result = await sendAgentMessage(
         integration!.id === "free-claude-code" ? "claude" : integration!.id,
-        userText
+        userText,
+        ac.signal
       );
-      setReply(result.reply);
       setChatHistory((current) => {
         const next = [
           ...current,
@@ -274,8 +445,8 @@ export default function AgentChatLayout({
         return next;
       });
     } catch (err) {
+      if (ac.signal.aborted) return;
       const errText = err instanceof Error ? err.message : "Dispatch failed";
-      setReply(errText);
       setChatHistory((current) => {
         const next = [
           ...current,
@@ -291,28 +462,72 @@ export default function AgentChatLayout({
     }
   }
 
+  // ── Copy message ───────────────────────────────────────────────
   function handleCopyMessage(content: string, idx: number) {
     navigator.clipboard.writeText(content);
     setCopiedIdx(idx);
     setTimeout(() => setCopiedIdx(null), 2000);
   }
 
-  // ── Derived data ─────────────────────────────────────────────────
+  // ── Clear chat ─────────────────────────────────────────────────
+  function clearChat() {
+    setChatHistory([]);
+    try {
+      window.localStorage.removeItem(storageKey);
+    } catch {}
+  }
+
+  // ── Keyboard shortcuts ─────────────────────────────────────────
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey) {
+      e.preventDefault();
+      send();
+    }
+    // Ctrl+Enter also sends
+    if (e.key === "Enter" && e.ctrlKey) {
+      e.preventDefault();
+      send();
+    }
+  }
+
+  // ── Drag & Drop ────────────────────────────────────────────────
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    // Handle file drops if needed
+  }
+
+  if (!integration) {
+    return (
+      <main className="ac-layout">
+        <div className="ac-empty-state">
+          <p>Connector not found.</p>
+        </div>
+      </main>
+    );
+  }
+
+  // ── Derived data ───────────────────────────────────────────────
   const Icon = agentIcons[id] || Bot;
   const badge = runtimeBadge(executionMode);
   const capabilities = integration.capabilities || ["chat"];
   const greeting = getGreeting();
 
-  // ── Chat-first layout (all agents) ──────────────────────────────
+  // ── Chat layout ────────────────────────────────────────────────
   return (
     <main className="ac-layout">
       {/* ── Left column: chat ── */}
       <div className="ac-chat-col">
-        {/* ── Compact Header ── */}
+        {/* ── Header ── */}
         <div className="ac-header">
           <div className="ac-header-left">
             <div className="ac-agent-icon">
-              <Icon size={20} />
+              <Icon size={18} />
             </div>
             <div className="ac-header-info">
               <h1 className="ac-header-name">{integration.label}</h1>
@@ -322,23 +537,17 @@ export default function AgentChatLayout({
                   {integration.status === "connected" ? "Connected" : integration.status}
                 </span>
                 <span className="ac-meta-sep">·</span>
-                <span className="ac-provider-label">
-                  Provider: <strong>{integration.label}</strong>
-                </span>
-                <span className="ac-meta-sep">·</span>
-                <span className="ac-runtime-label">
-                  Runtime: <strong>{badge.label}</strong>
-                </span>
+                <span>{badge.label}</span>
               </div>
             </div>
           </div>
           <div className="ac-header-right">
             <div className="ac-capabilities">
-              {capabilities.slice(0, 6).map((cap) => {
+              {capabilities.slice(0, 4).map((cap) => {
                 const CapIcon = capabilityIcon(cap);
                 return (
                   <span key={cap} className="ac-cap-chip">
-                    <CapIcon size={12} />
+                    <CapIcon size={11} />
                     {cap}
                   </span>
                 );
@@ -355,7 +564,7 @@ export default function AgentChatLayout({
         </div>
 
         {/* ── Chat area ── */}
-        <div className="ac-chat-area">
+        <div className="ac-chat-area" ref={chatAreaRef}>
           {chatHistory.length === 0 ? (
             /* ── Empty state ── */
             <div className="ac-empty-state">
@@ -378,60 +587,31 @@ export default function AgentChatLayout({
             </div>
           ) : (
             /* ── Messages ── */
-            <div className="ac-messages">
-              {chatHistory.map((entry, idx) => {
-                const isUser = entry.role === "user";
-                return (
-                  <div key={idx} className={`ac-msg ${isUser ? "ac-msg-user" : "ac-msg-assistant"}`}>
-                    {!isUser && (
-                      <div className="ac-msg-avatar">
-                        <Icon size={18} />
-                      </div>
-                    )}
-                    <div className={`ac-msg-card ${isUser ? "ac-msg-card-user" : "ac-msg-card-assistant"}`}>
-                      <div className="ac-msg-header">
-                        <span className="ac-msg-label">
-                          {isUser ? "You" : integration.label}
-                        </span>
-                        {entry.mode && entry.mode !== "nvidia_fallback" && (
-                          <span className="ac-msg-mode">{entry.mode}</span>
-                        )}
-                        {entry.timestamp && (
-                          <span className="ac-msg-time">{formatTime(new Date(entry.timestamp))}</span>
-                        )}
-                      </div>
-                      <div className="ac-msg-body">
-                        {isUser ? (
-                          <p className="ac-msg-text">{entry.content}</p>
-                        ) : (
-                          <RenderedMarkdown content={entry.content} />
-                        )}
-                      </div>
-                      {!isUser && (
-                        <div className="ac-msg-actions">
-                          <button
-                            className="ac-msg-action"
-                            onClick={() => handleCopyMessage(entry.content, idx)}
-                            title="Copy"
-                          >
-                            {copiedIdx === idx ? <Check size={14} /> : <Copy size={14} />}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="ac-messages" aria-live="polite">
+              {chatHistory.map((entry, idx) => (
+                <ChatMessage
+                  key={entry.timestamp ?? idx}
+                  entry={entry}
+                  idx={idx}
+                  isUser={entry.role === "user"}
+                  integrationLabel={integration.label}
+                  Icon={Icon}
+                  onCopy={handleCopyMessage}
+                  copiedIdx={copiedIdx}
+                  onRetry={() => {}}
+                  onBookmark={() => {}}
+                  onPin={() => {}}
+                />
+              ))}
               {busy && (
                 <div className="ac-msg ac-msg-assistant">
                   <div className="ac-msg-avatar">
-                    <Icon size={18} />
+                    <Icon size={16} />
                   </div>
                   <div className="ac-msg-card ac-msg-card-assistant">
-                    <div className="ac-typing-indicator">
-                      <span className="ac-typing-dot" />
-                      <span className="ac-typing-dot" />
-                      <span className="ac-typing-dot" />
+                    <div className="ac-streaming-status">
+                      <span className="ac-streaming-dot" />
+                      <span>{streamingMsg || "Thinking..."}</span>
                     </div>
                   </div>
                 </div>
@@ -440,6 +620,18 @@ export default function AgentChatLayout({
             </div>
           )}
         </div>
+
+        {/* ── Scroll to bottom button ── */}
+        <button
+          className={`ac-scroll-bottom ${showScrollBtn ? "" : "ac-scroll-bottom-hidden"}`}
+          onClick={() => {
+            scrollToBottom();
+            isUserScrollingRef.current = false;
+          }}
+        >
+          <ArrowDown size={14} />
+          Scroll to latest
+        </button>
 
         {/* ── Quick actions ── */}
         {chatHistory.length === 0 && (
@@ -452,7 +644,7 @@ export default function AgentChatLayout({
                   className="ac-quick-chip"
                   onClick={() => setMessage(action.prompt)}
                 >
-                  <ActionIcon size={14} />
+                  <ActionIcon size={13} />
                   {action.label}
                 </button>
               );
@@ -461,7 +653,11 @@ export default function AgentChatLayout({
         )}
 
         {/* ── Composer ── */}
-        <div className="ac-composer">
+        <div
+          className="ac-composer"
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
           <div className="ac-composer-toolbar">
             <button className="ac-composer-tool" title="Attach file">
               <Paperclip size={16} />
@@ -469,22 +665,15 @@ export default function AgentChatLayout({
             <button className="ac-composer-tool" title="Add image">
               <ImageIcon size={16} />
             </button>
-            <button className="ac-composer-tool" title="Record voice">
-              <Mic size={16} />
-            </button>
           </div>
           <div className="ac-composer-input-wrap">
             <textarea
+              ref={textareaRef}
               className="ac-composer-input"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  if (!busy && message.trim()) send();
-                }
-              }}
-              placeholder={`Ask ${integration.label}...`}
+              onChange={handleTextareaChange}
+              onKeyDown={handleKeyDown}
+              placeholder={`Ask ${integration.label}... (Shift+Enter for newline)`}
               rows={1}
             />
           </div>
@@ -492,7 +681,7 @@ export default function AgentChatLayout({
             className="ac-composer-send"
             onClick={send}
             disabled={busy || !message.trim()}
-            title="Send"
+            title="Send (Enter)"
           >
             {busy ? <Loader2 className="ac-spin" size={18} /> : <Send size={18} />}
           </button>
@@ -506,7 +695,7 @@ export default function AgentChatLayout({
             {/* Agent Status */}
             <div className="ac-sidebar-section">
               <div className="ac-sidebar-section-head">
-                <Gauge size={14} />
+                <Gauge size={13} />
                 <span>Agent Status</span>
               </div>
               <div className="ac-sidebar-status">
@@ -530,7 +719,7 @@ export default function AgentChatLayout({
             {/* Chat Stats */}
             <div className="ac-sidebar-section">
               <div className="ac-sidebar-section-head">
-                <MessageSquare size={14} />
+                <MessageSquare size={13} />
                 <span>Chat Stats</span>
               </div>
               <div className="ac-sidebar-status">
@@ -552,7 +741,7 @@ export default function AgentChatLayout({
             {/* Capabilities */}
             <div className="ac-sidebar-section">
               <div className="ac-sidebar-section-head">
-                <Sparkles size={14} />
+                <Sparkles size={13} />
                 <span>Capabilities</span>
               </div>
               <div className="ac-sidebar-capabilities">
@@ -565,13 +754,17 @@ export default function AgentChatLayout({
             {/* Actions */}
             <div className="ac-sidebar-section">
               <div className="ac-sidebar-section-head">
-                <Zap size={14} />
+                <Zap size={13} />
                 <span>Actions</span>
               </div>
               <div className="ac-sidebar-actions">
                 <button className="ac-sidebar-action-btn" onClick={onOpenPlugins}>
-                  <Gauge size={14} />
+                  <Gauge size={13} />
                   Plugin matrix
+                </button>
+                <button className="ac-sidebar-action-btn" onClick={clearChat}>
+                  <Trash2 size={13} />
+                  Clear chat
                 </button>
               </div>
             </div>

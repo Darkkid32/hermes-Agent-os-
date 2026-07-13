@@ -4,6 +4,14 @@ import { verifyExecution, formatVerificationReport } from "./verification.js";
 import { executeAllowedCommand } from "./terminal-executor.js";
 
 const orchestrations = new Map();
+const MAX_ORCHESTRATIONS = 100;
+
+function evictOldest(map, max) {
+  while (map.size > max) {
+    const firstKey = map.keys().next().value;
+    map.delete(firstKey);
+  }
+}
 
 const LIMITS = {
   MAX_STEPS: 25,
@@ -60,6 +68,7 @@ async function orchestrate(goal, options = {}) {
     log: []
   };
   orchestrations.set(orchestrationId, state);
+  evictOldest(orchestrations, MAX_ORCHESTRATIONS);
   function addLog(message, level = "info") {
     state.log.push({ timestamp: new Date().toISOString(), level, message });
   }

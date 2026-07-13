@@ -1,6 +1,5 @@
 import https from "node:https";
 
-const NVIDIA_API_KEY = "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";
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
 const MODEL_MAP = {
@@ -11,6 +10,27 @@ const MODEL_MAP = {
   opencode: "nvidia/nemotron-mini-4b-instruct",
   "free-claude-code": "meta/llama-3.1-8b-instruct"
 };
+
+// Per-model limits to prevent server crashes and token over-runs.
+const MODEL_LIMITS = {
+  "meta/llama-3.1-70b-instruct": { maxTokens: 4096, temperatureMax: 2.0 },
+  "google/gemma-2-2b-it": { maxTokens: 4096, temperatureMax: 2.0 },
+  "meta/llama-3.1-8b-instruct": { maxTokens: 4096, temperatureMax: 2.0 },
+  "nvidia/nemotron-mini-4b-instruct": { maxTokens: 512, temperatureMax: 1.0 }
+};
+
+const MAX_MESSAGES = 50;
+const MAX_MESSAGE_LENGTH = 16000;
+
+function getApiKey() {
+  const key = process.env.NVIDIA_API_KEY;
+  if (!key || key.trim().length === 0) {
+    // Fail closed. The rotated key has been removed from source; a missing key
+    // means the operator has not provisioned env yet.
+    throw new Error("NVIDIA_API_KEY is not configured");
+  }
+  return key;
+}
 
 function httpsPost(url, body, headers, timeoutMs = 120000) {
   return new Promise((resolve, reject) => {
@@ -59,7 +79,45 @@ function httpsPost(url, body, headers, timeoutMs = 120000) {
   });
 }
 
+function validatePayload(messages, temperature, maxTokens, modelLimits) {
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return "messages must be a non-empty array";
+  }
+  if (messages.length > MAX_MESSAGES) {
+    return `messages exceeds maximum length of ${MAX_MESSAGES}`;
+  }
+  for (const msg of messages) {
+    if (!msg || typeof msg !== "object") return "each message must be an object";
+    if (typeof msg.role !== "string" || !["system", "user", "assistant"].includes(msg.role)) {
+      return "each message must have a valid role";
+    }
+    if (typeof msg.content !== "string") return "each message content must be a string";
+    if (msg.content.length > MAX_MESSAGE_LENGTH) {
+      return `message content exceeds ${MAX_MESSAGE_LENGTH} characters`;
+    }
+  }
+  if (temperature !== undefined) {
+    if (typeof temperature !== "number" || Number.isNaN(temperature)) {
+      return "temperature must be a number";
+    }
+    if (temperature < 0 || temperature > modelLimits.temperatureMax) {
+      return `temperature must be between 0 and ${modelLimits.temperatureMax}`;
+    }
+  }
+  if (maxTokens !== undefined) {
+    if (typeof maxTokens !== "number" || !Number.isInteger(maxTokens)) {
+      return "max_tokens must be an integer";
+    }
+    if (maxTokens < 1 || maxTokens > modelLimits.maxTokens) {
+      return `max_tokens must be between 1 and ${modelLimits.maxTokens}`;
+    }
+  }
+  return null;
+}
+
 export async function handleLlmExecute(req, res, next) {
+  const apiKey = getApiKey();
+
   try {
     const { engine, messages, temperature, max_tokens } = req.body || {};
 
@@ -69,9 +127,15 @@ export async function handleLlmExecute(req, res, next) {
     }
 
     const model = MODEL_MAP[engine] || MODEL_MAP.claude;
+    const modelLimits = MODEL_LIMITS[model];
 
-    // nemotron-mini has a lower max_tokens limit
-    const defaultMaxTokens = model === "nvidia/nemotron-mini-4b-instruct" ? 512 : 4096;
+    const validationError = validatePayload(messages, temperature, max_tokens, modelLimits);
+    if (validationError) {
+      res.status(400).json({ ok: false, error: validationError });
+      return;
+    }
+
+    const defaultMaxTokens = modelLimits.maxTokens;
 
     console.log(`[llm-proxy] Executing: engine=${engine}, model=${model}, messages=${messages.length}`);
 
@@ -83,7 +147,7 @@ export async function handleLlmExecute(req, res, next) {
       stream: false
     }, {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${NVIDIA_API_KEY}`
+      "Authorization": `Bearer ${apiKey}`
     });
 
     console.log(`[llm-proxy] Response status: ${response.status}`);

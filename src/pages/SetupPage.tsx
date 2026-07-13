@@ -1,22 +1,6 @@
 import { Mic, Settings } from "lucide-react";
-
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="metric">
-      <span>{label}</span>
-      <b title={value}>{value}</b>
-    </div>
-  );
-}
-
-function SectionHeading({ title, suffix }: { title: string; suffix?: string }) {
-  return (
-    <div className="section-heading">
-      <h2>{title}</h2>
-      {suffix ? <span>{suffix}</span> : null}
-    </div>
-  );
-}
+import Metric from "../components/ui/Metric";
+import SectionHeading from "../components/ui/SectionHeading";
 
 export default function SetupPage() {
   return (

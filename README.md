@@ -61,12 +61,29 @@ Copy `.env.example` to `.env` and configure:
 cp .env.example .env
 ```
 
-Required:
-- `NVIDIA_API_KEY` - Your NVIDIA API key for LLM execution
+### Required
 
-Optional:
-- `PORT` - Server port (default: 4173)
-- `HERMES_HOME` - Hermes home directory
+| Variable           | Purpose                                                      |
+| ------------------ | ------------------------------------------------------------ |
+| `NVIDIA_API_KEY`   | NVIDIA NIM / `integrate.api.nvidia.com` API key for LLM execution |
+| `HERMES_API_TOKEN` | Bearer token required for state-changing API calls (LLM, modules, edit, terminal). Minimum 16 chars. Empty disables auth (only valid for local development on 127.0.0.1). |
+
+### Optional
+
+| Variable                  | Default                        | Purpose                                                  |
+| ------------------------- | ------------------------------ | -------------------------------------------------------- |
+| `PORT`                    | `4173`                         | Server port                                              |
+| `HERMES_ALLOWED_ORIGINS`  | `http://127.0.0.1:4173,http://localhost:4173` | Comma-separated CORS allowlist          |
+| `HERMES_LLM_RATE_LIMIT`   | `60`                           | LLM proxy requests per window                            |
+| `HERMES_LLM_RATE_WINDOW`  | `1`                            | Rate limit window in minutes                             |
+| `HERMES_HOME`             | `~/.hermes`                    | Hermes home directory                                    |
+
+### Security Notes (v1.0.1+)
+
+- The previous hardcoded NVIDIA API key in `server/runtime/llm-proxy.js` has been **removed**. Provisioning now happens exclusively through environment variables.
+- `helmet`, `express-rate-limit`, and a shared bearer-token middleware (`server/runtime/auth.js`) gate state-changing endpoints: `/api/llm/*`, `/api/edit/*`, `/api/modules/*`, `/api/terminal/*`, `/api/execute/*`, `/api/orchestrate/*`, `/api/verify/*`, `/api/installers/*`, `/api/admin/*`.
+- CORS is restricted to the `HERMES_ALLOWED_ORIGINS` allowlist. Anything else is rejected.
+- Get rotated keys from <https://build.nvidia.com>. Treat any key that has ever been committed to a public repository as **revoked**.
 
 ## Build
 

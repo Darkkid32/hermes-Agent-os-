@@ -1,23 +1,9 @@
 import { Gauge, Loader2, ShieldCheck, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { testIntegration } from "../api";
+import Metric from "../components/ui/Metric";
+import { statusLabel } from "../components/ui/statusLabel";
 import type { Integration } from "../types";
-
-function statusLabel(status: string) {
-  if (status === "ready_to_connect") return "Ready";
-  if (status === "ready_to_configure") return "Configure";
-  if (status === "missing_dependency") return "Missing";
-  return status;
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="metric">
-      <span>{label}</span>
-      <b title={value}>{value}</b>
-    </div>
-  );
-}
 
 export default function Drawer({
   integration,
@@ -28,6 +14,42 @@ export default function Drawer({
 }) {
   const [result, setResult] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Escape key closes drawer
+  useEffect(() => {
+    if (!integration) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [integration, onClose]);
+
+  // Focus trap within drawer
+  useEffect(() => {
+    if (!integration || !drawerRef.current) return;
+    const el = drawerRef.current;
+    const focusable = el.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length) focusable[0].focus();
+
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    el.addEventListener("keydown", trap);
+    return () => el.removeEventListener("keydown", trap);
+  }, [integration]);
 
   if (!integration) return null;
 
@@ -46,7 +68,7 @@ export default function Drawer({
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <aside className="drawer" onClick={(event) => event.stopPropagation()}>
+      <aside className="drawer" ref={drawerRef} onClick={(event) => event.stopPropagation()}>
         <button className="drawer-close" onClick={onClose} aria-label="Close">
           <X size={18} />
         </button>

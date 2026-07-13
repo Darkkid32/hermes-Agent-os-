@@ -21,6 +21,9 @@ import {
   Workflow
 } from "lucide-react";
 import type { Integration, IntegrationSnapshot } from "../types";
+import Metric from "../components/ui/Metric";
+import SectionHeading from "../components/ui/SectionHeading";
+import { statusLabel } from "../components/ui/statusLabel";
 
 const iconMap: Record<string, typeof Activity> = {
   claude: TerminalSquare,
@@ -58,35 +61,10 @@ const iconMap: Record<string, typeof Activity> = {
   "firecrawl-builder": Workflow
 };
 
-function statusLabel(status: string) {
-  if (status === "ready_to_connect") return "Ready";
-  if (status === "ready_to_configure") return "Configure";
-  if (status === "missing_dependency") return "Missing";
-  return status;
-}
-
 function statusClass(status: string) {
   if (status === "connected") return "is-online";
   if (status === "ready_to_connect" || status === "ready_to_configure") return "is-ready";
   return "is-muted";
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="metric">
-      <span>{label}</span>
-      <b title={value}>{value}</b>
-    </div>
-  );
-}
-
-function SectionHeading({ title, suffix }: { title: string; suffix?: string }) {
-  return (
-    <div className="section-heading">
-      <h2>{title}</h2>
-      {suffix ? <span>{suffix}</span> : null}
-    </div>
-  );
 }
 
 function StatCard({

@@ -13,11 +13,20 @@ const PROJECT_ROOT = path.resolve(process.cwd());
 const MAX_HISTORY = Number(process.env.HERMES_CHAT_HISTORY_LIMIT || 20);
 const MAX_CONTEXT_CHARS = Number(process.env.HERMES_PROJECT_CONTEXT_LIMIT || 25000);
 const conversationHistory = new Map();
+const MAX_SESSIONS = 50;
+
+function evictOldestSessions(map, max) {
+  while (map.size > max) {
+    const firstKey = map.keys().next().value;
+    map.delete(firstKey);
+  }
+}
 
 function getHistory(sessionId) {
   if (!sessionId) return [];
   if (!conversationHistory.has(sessionId)) {
     conversationHistory.set(sessionId, []);
+    evictOldestSessions(conversationHistory, MAX_SESSIONS);
   }
   return conversationHistory.get(sessionId);
 }

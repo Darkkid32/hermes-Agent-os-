@@ -2,6 +2,14 @@ import { readFileTool, searchText, findSymbolReferences, searchFilenames, buildP
 import { proposeEdit, applyEdit } from "./modules.js";
 
 const executions = new Map();
+const MAX_EXECUTIONS = 100;
+
+function evictOldest(map, max) {
+  while (map.size > max) {
+    const firstKey = map.keys().next().value;
+    map.delete(firstKey);
+  }
+}
 
 function createExecutionId() {
   return `exec-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -38,6 +46,7 @@ function createExecution(plan) {
     completedAt: null
   };
   executions.set(id, execution);
+  evictOldest(executions, MAX_EXECUTIONS);
   return execution;
 }
 

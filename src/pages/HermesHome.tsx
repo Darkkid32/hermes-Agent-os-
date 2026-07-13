@@ -37,6 +37,8 @@ import { loadAgents, subscribeAgents } from "../hermes/AgentStore";
 import type { BusinessAgent } from "../hermes/BusinessAgent";
 import { EXECUTION_ENGINES } from "../hermes/BusinessAgent";
 import type { CapabilityAnalysis, AgentMatch } from "../hermes/CapabilityMatcher";
+import agentIcons from "../services/agentIcons";
+import { getGreeting } from "../services/greeting";
 import {
   executePlan,
   subscribe,
@@ -60,24 +62,6 @@ import {
   type ApprovalRequest,
   type RiskLevel
 } from "../hermes/ApprovalManager";
-
-const agentIcons: Record<string, typeof TerminalSquare> = {
-  claude: TerminalSquare,
-  openclaw: Bot,
-  openclaude: Sparkles,
-  gemini: Sparkles,
-  codex: Zap,
-  opencode: TerminalSquare,
-  "free-claude-code": PlugZap
-};
-
-function getGreeting(): string {
-  const h = new Date().getHours();
-  if (h < 6) return "Good Night";
-  if (h < 12) return "Good Morning";
-  if (h < 17) return "Good Afternoon";
-  return "Good Evening";
-}
 
 function WorkspaceCard({ workspace }: { workspace: Workspace }) {
   return (

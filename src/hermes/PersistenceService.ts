@@ -8,6 +8,8 @@ import type { Timeline } from "./TimelineService";
 import type { ExecutionLog } from "./BusinessAgentRuntime";
 
 const STORAGE_KEY = "hermes-state";
+let saveTimer: ReturnType<typeof setTimeout> | null = null;
+let pendingState: HermesState | null = null;
 
 interface PersistedState {
   workspace: Workspace | null;
@@ -21,21 +23,29 @@ interface PersistedState {
 }
 
 export function saveState(state: HermesState): void {
-  try {
-    const toSave: PersistedState = {
-      workspace: state.workspace,
-      goal: state.goal,
-      notebook: state.notebook,
-      kanban: state.kanban,
-      memory: state.memory,
-      timeline: state.timeline,
-      executionLogs: state.executionLogs.slice(0, 100),
-      savedAt: Date.now()
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-  } catch (e) {
-    console.error("[PersistenceService] Failed to save:", e);
-  }
+  pendingState = state;
+  if (saveTimer) return;
+  saveTimer = setTimeout(() => {
+    saveTimer = null;
+    if (!pendingState) return;
+    const s = pendingState;
+    pendingState = null;
+    try {
+      const toSave: PersistedState = {
+        workspace: s.workspace,
+        goal: s.goal,
+        notebook: s.notebook,
+        kanban: s.kanban,
+        memory: s.memory,
+        timeline: s.timeline,
+        executionLogs: s.executionLogs.slice(0, 100),
+        savedAt: Date.now()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    } catch (e) {
+      console.error("[PersistenceService] Failed to save:", e);
+    }
+  }, 1000);
 }
 
 export function loadState(): Partial<HermesState> | null {

@@ -6,9 +6,11 @@ dist/
 coverage/
 build/
 out/
+vendor/open-agent-builder/.next/
 
 # Logs
 *.log
+*.txt
 npm-debug.log*
 
 # Environment files
@@ -17,6 +19,7 @@ npm-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.example.hermes-backup
 
 # IDE
 .vscode/
@@ -34,10 +37,15 @@ Thumbs.db
 *.tmp
 *.cache
 
+# Images / verify screenshots
+*.png
+
 # Test files with secrets
-test.py
-test2.py
 test*.py
 
 # Backup
-.env.example.hermes-backup
+*.backup
+*.bak
+
+# Playwright MCP logs
+.playwright-mcp/
