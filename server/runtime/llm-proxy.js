@@ -3,17 +3,17 @@ import https from "node:https";
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
 const MODEL_MAP = {
-  claude: "minimax/minimax-m3-2402",
-  gemini: "minimax/minimax-m3-2402",
-  codex: "minimax/minimax-m3-2402",
-  openclaw: "minimax/minimax-m3-2402",
-  opencode: "minimax/minimax-m3-2402",
-  "free-claude-code": "minimax/minimax-m3-2402"
+  claude: "minimaxai/minimax-m3",
+  gemini: "minimaxai/minimax-m3",
+  codex: "minimaxai/minimax-m3",
+  openclaw: "minimaxai/minimax-m3",
+  opencode: "minimaxai/minimax-m3",
+  "free-claude-code": "minimaxai/minimax-m3"
 };
 
 // Per-model limits to prevent server crashes and token over-runs.
 const MODEL_LIMITS = {
-  "minimax/minimax-m3-2402": { maxTokens: 4096, temperatureMax: 2.0 }
+  "minimaxai/minimax-m3": { maxTokens: 4096, temperatureMax: 2.0 }
 };
 
 const MAX_MESSAGES = 50;
@@ -22,8 +22,6 @@ const MAX_MESSAGE_LENGTH = 16000;
 function getApiKey() {
   const key = process.env.NVIDIA_API_KEY;
   if (!key || key.trim().length === 0) {
-    // Fail closed. The rotated key has been removed from source; a missing key
-    // means the operator has not provisioned env yet.
     throw new Error("NVIDIA_API_KEY is not configured");
   }
   return key;
@@ -134,8 +132,6 @@ export async function handleLlmExecute(req, res, next) {
 
     const defaultMaxTokens = modelLimits.maxTokens;
 
-    console.log(`[llm-proxy] Executing: engine=${engine}, model=${model}, messages=${messages.length}`);
-
     const response = await httpsPost(NVIDIA_API_URL, {
       model,
       messages,
@@ -147,10 +143,7 @@ export async function handleLlmExecute(req, res, next) {
       "Authorization": `Bearer ${apiKey}`
     });
 
-    console.log(`[llm-proxy] Response status: ${response.status}`);
-
     if (response.status !== 200) {
-      console.error(`[llm-proxy] Provider error: ${response.data.substring(0, 500)}`);
       res.status(response.status).json({ ok: false, error: `Provider error: ${response.data}` });
       return;
     }
@@ -158,8 +151,6 @@ export async function handleLlmExecute(req, res, next) {
     const data = JSON.parse(response.data);
     const content = data.choices?.[0]?.message?.content || "";
     const tokens = data.usage?.total_tokens || 0;
-
-    console.log(`[llm-proxy] Success: tokens=${tokens}, contentLength=${content.length}`);
 
     res.json({
       ok: true,
@@ -169,7 +160,6 @@ export async function handleLlmExecute(req, res, next) {
       engine
     });
   } catch (error) {
-    console.error(`[llm-proxy] Error: ${error.message}`);
     if (!res.headersSent) {
       res.status(500).json({ ok: false, error: error.message });
     }

@@ -6,6 +6,9 @@ process.on("uncaughtException", (err) => {
   console.error("[server] Uncaught Exception:", err);
 });
 
+import { config } from "dotenv";
+config();
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -69,7 +72,6 @@ import {
 import { verifyExecution, formatVerificationReport } from "./runtime/verification.js";
 import { executeAllowedCommand, isCommandAllowed, ALLOWED_COMMANDS } from "./runtime/terminal-executor.js";
 import { orchestrate, getOrchestration, listOrchestrations, approveOrchestration, generateOrchestrationReport } from "./runtime/orchestrator.js";
-import { handleLlmExecute } from "./runtime/llm-proxy.js";
 import { createAuthMiddleware, createRateLimitMiddleware } from "./runtime/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -639,7 +641,14 @@ app.get("/api/workflows/:id/runs/:runId", async (req, res, next) => {
   }
 });
 
-app.post("/api/llm/execute", llmRateLimit, handleLlmExecute);
+app.post("/api/llm/execute", llmRateLimit, async (req, res, next) => {
+  try {
+    const { handleLlmExecute } = await import("./runtime/llm-proxy.js");
+    await handleLlmExecute(req, res, next);
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.post("/api/admin/export/prepare", async (req, res, next) => {
   try {
